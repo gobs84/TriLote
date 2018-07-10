@@ -1,0 +1,31 @@
+<div [@routerTransition]>
+    <h2 class="text-muted">Bienvenido <small>.</small></h2>
+    <div class="row">
+        <div class="col-md-12">
+            <ngb-carousel>
+                <ng-template ngbSlide *ngFor="let slider of sliders">
+                    <img class="img-fluid mx-auto d-block" [src]="slider.imagePath" alt="Random first slide" width="100%">
+                    <div class="carousel-caption">
+                        <h3>{{slider.label}}</h3>
+                        <p>{{slider.text}}</p>
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xl-3 col-lg-6">
+            <a href="https://clasificados.laopinion.com.co/categoria/finca-raiz"><app-stat [bgClass]="'primary'" [icon]="'fa-comments'" [count]="" [label]="'OPINION'" ></app-stat></a>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <a href="https://clasificados.lostiempos.com/inmuebles"><app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="" [label]="'LOS TIEMPOS'" ></app-stat></a>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <a href="http://www.eldiario.net/clasificados/clasificados.php?c=2"><app-stat [bgClass]="'success'" [icon]="'fa-shopping-cart'" [count]="" [label]="'EL DIARIO'" ></app-stat></a>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <a href="https://www.ultracasas.com/bo/site-search/inmueble"><app-stat [bgClass]="'danger'" [icon]="'fa-support'" [count]="" [label]="'ULTRA CASAS'"></app-stat></a>
+        </div>
+    </div>
+</div>

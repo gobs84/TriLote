@@ -1,0 +1,36 @@
+agm-map {
+  height: 500px;
+  width: 1000px;
+}
+
+.nested-menu {
+    .list-group-item {
+        cursor: pointer;
+        border: 0;
+        border-color: white;
+        border-radius: 1;
+        color: #999;
+        text-decoration: none;
+    }
+    .nested {
+        list-style-type: none;
+    }
+    ul.submenu {
+        display: none;
+        height: 0;
+    }
+    & .expand {
+        ul.submenu {
+            display: block;
+            list-style-type: none;
+            height: auto;
+            li {
+                a {
+                    color: black;
+                    padding: 10px;
+                    display: block;
+                }
+            }
+        }
+    }
+}
