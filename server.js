@@ -7,11 +7,20 @@ var mongoose = require('mongoose');
 var config = require('./config/DB');
 
 //	busca y conecta con la base de datos
-	/*mongoose.Promise = global.Promise;
-  	mongoose.connect(config.DB).then(
-      	() => {console.log('Database is connected') },
-        err => { console.log('Can not connect to the database'+ err)}
-    );*/
+  	var db = mongoose.connect(config.DB,function(err,response){
+          if(err){console.log(err);}
+          //else{console.log("connected: "+db,' + ',response);}
+      });
+
+      
+    
+      var db1 =mongoose.connection;
+      db1.on('error',console.error.bind(console,'error'));
+      db1.once('open',function(){
+          console.log(':)');
+      });
+        
+    
 
 const app = express();
 app.use(cors())
@@ -29,9 +38,19 @@ app.use(express.static(path.join(__dirname, 'src')));
 app.use('/api', api);
 
 // Send all other requests to the Angular app
-app.get('*', (req, res) => {
+app.get('map', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/index.html'));
 });
+
+var usuario = require('./src/app/Models/punto.js')
+app.get('/p', function(req,res,next){
+    usuario.find(function(err,post){
+        if(err) return next(err);
+        else{
+            res.json(post);
+        }
+    });
+ });
 
 //Set Port
 const port = process.env.PORT || '3000';
@@ -40,3 +59,14 @@ app.set('port', port);
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
+
+/*var router = express.Router();
+var punto = require('./src/app/Models/punto.js')
+ router.get('/:ID', function(req,res,next){
+    punto.findById(req.params.ID, function(err,post){
+        if(err) return next(err);
+        res.json(post);
+    });
+ });
+
+ module.exports = router;*/
