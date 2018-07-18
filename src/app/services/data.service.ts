@@ -19,7 +19,7 @@ export class DataService {
       .map(result => this.result = result.json().data);*/
   }
   getMunicipios(){
-    return this._http.get("http://localhost:3000/p")
+    return this._http.get("http://localhost:3000/api/municipios")
   }
 
 }
