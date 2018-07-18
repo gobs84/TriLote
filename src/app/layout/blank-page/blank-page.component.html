@@ -17,7 +17,10 @@
                 </div>
             </agm-info-window>      
         </agm-marker>
-        
+        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="red"
+               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [strokeColor]="blue" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" [zIndex]="1"></agm-polygon>
         <agm-kml-layer [url]="otbsKmlUrl" *ngIf="otbsFlag"></agm-kml-layer>
         <agm-kml-layer [url]="distritosKmlUrl" *ngIf="distritosFlag"></agm-kml-layer>
 	</agm-map>&nbsp;   

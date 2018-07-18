@@ -11,6 +11,7 @@ import { DataService } from '../../services/data.service';
 })
 export class BlankPageComponent implements OnInit {
     showMenu: string = '';
+    municipios = [];
 //    Variables para estadisticas con todos los datos
     items = [];
     precios = [];
@@ -224,6 +225,37 @@ export class BlankPageComponent implements OnInit {
         error => {
             console.log(error);
         });
+        this._dataService.getMunicipios()
+        .subscribe(response => {
+            var datos = <Array<any>>response;
+            datos.sort((n1,n2) => n1.ID - n2.ID)
+            var count = -1;
+            var nombre = "";
+            for(let dato of datos) {
+                if(dato.NOM_MUN === nombre){
+                    this.municipios[count].puntos.push({
+                        lat : dato.lng,
+                        lng : dato.lat
+                    })
+                }else{
+                    count++;
+                    nombre =dato.NOM_MUN;
+                    this.municipios.push({
+                        nombre : dato.NOM_MUN,
+                        puntos : [{
+                            lat : dato.lng,
+                            lng : dato.lat
+                        }]
+                    });
+                }
+            }
+            console.log('municipios:',this.municipios);
+        },
+        error => {
+            console.log(error);
+        });
+
+
     }
 //    Metodo para controlar los botones de radio, Global, Distritos, Otb's
     radioButtonChange(event) {

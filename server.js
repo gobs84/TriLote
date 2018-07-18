@@ -11,14 +11,6 @@ var config = require('./config/DB');
           if(err){console.log(err);}
           //else{console.log("connected: "+db,' + ',response);}
       });
-
-      
-    
-      var db1 =mongoose.connection;
-      db1.on('error',console.error.bind(console,'error'));
-      db1.once('open',function(){
-          console.log(':)');
-      });
         
     
 

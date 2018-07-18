@@ -18,8 +18,8 @@ export class DataService {
     /*return this._http.get("http://localhost:3000/api/users")
       .map(result => this.result = result.json().data);*/
   }
-  getPunto(){
-    return this._http.get("http://localhost:3000/api/id")
+  getMunicipios(){
+    return this._http.get("http://localhost:3000/p")
   }
 
 }
