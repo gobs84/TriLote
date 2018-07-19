@@ -66,40 +66,74 @@ parser.addRule(/\- Anti([\S]+)co/ig, function (tag, data_txt) {
 });
 
 var municipios = [];
+var distritos = [];
+var otbs = [];
 
-function verificarMun(lat, long) {
-    for (let municipio of municipios) {
+function verificar(lat, long, tipo) {
+    var dato = [];
+    if (tipo == 1) { dato = municipios; }
+    else if (tipo == 2) { dato = distritos }
+    else if (tipo == 3) { dato = otbs }
+    else { return '' }
+    for (let municipio of dato) {
         var pt = turf.point([lat, long]);
         var poly = turf.polygon([municipio.puntos]);
-        //console.log('a');
         if (turf.booleanPointInPolygon(pt, poly)) {
-            //console.log(municipio.nombre);
             return municipio.nombre;
         }
     }
     return '';
 }
 
-function llenarMun(post) {
-    municipios = [];
+function llenar(post, x) {
+    if (x == 1) {
+        municipios = [];
+    }
+    else if (x == 2) {
+        distritos = [];
+    }
+    else if (x == 2) {
+        otbs = [];
+    }
+    else { return; }
     var datosmun = post;
     datosmun.sort((n1, n2) => n1.ID - n2.ID);
     var count = -1;
     var nombre = "";
-    for (let dato of datosmun) {
-        if (dato.NOM_MUN === nombre) {
-            municipios[count].puntos.push([dato.lng, dato.lat])
-        } else {
-            count++;
-            nombre = dato.NOM_MUN;
-            municipios.push({
-                nombre: dato.NOM_MUN,
-                puntos: [[dato.lng, dato.lat]]
-            });
+    if (x == 1) {
+        for (let dato of datosmun) {
+            if (dato.NOM_MUN === nombre) {
+                municipios[count].puntos.push([dato.lng, dato.lat])
+            } else {
+                count++;
+                nombre = dato.NOM_MUN;
+                municipios.push({
+                    nombre: dato.NOM_MUN,
+                    puntos: [[dato.lng, dato.lat]]
+                });
+            }
         }
-    }
-    for (let municipio of municipios) {
-        municipio.puntos.push(municipio.puntos[0]);
+        for (let municipio of municipios) {
+            municipio.puntos.push(municipio.puntos[0]);
+        }
+    } else if (x == 2) {
+        for (let dato of datosmun) {
+            if (dato.Nomb_dist === nombre) {
+                distritos[count].puntos.push([dato.LNG, dato.LAT])
+            } else {
+                count++;
+                nombre = dato.Nomb_dist;
+                distritos.push({
+                    nombre: dato.Nomb_dist,
+                    puntos: [[dato.LNG, dato.LAT]]
+                });
+            }
+        }
+        for (let distrito of distritos) {
+            distrito.puntos.push(distrito.puntos[0]);
+        }
+    } else if (x == 3) {
+        // aun nada
     }
 }
 
@@ -116,44 +150,51 @@ function scrap() {
                 var miArray = parser.toTree(firstPartition[0]); //ahora aplicamos el parseo con la reglas previamente cargadas(las de arriba/addRule..)
                 console.log("Se guardo el archivo correctamente");  //mensaje de aviso
                 var punto = require('../../src/app/Models/punto.js');
-                punto.find(function (err, post) {
+                punto.find(function (err, post1) {
                     if (err) return err;
                     else {
-                        llenarMun(post);
-                        var lat, long, pre, sec, tip,mun,dis,otb;   // variables para cargar datos de interes, latitud, longitud, precio, seccion, tipo
-                        for (let item of miArray) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
-                            if (!item.text) {
-                                if (item.latitud) {
-                                    lat = item.latitud;
-                                }
-                                if (item.longitud) {
-                                    long = item.longitud;
-                                }
-                                if (item.precio) {
-                                    pre = item.precio;
-                                }
-                                if (item.seccion) {
-                                    sec = item.seccion;
-                                }
-                                if (item.tipo) {
-                                    tip = item.tipo;
-                                    mun = verificarMun(Number(lat),Number(long));
-                                    information.push({          //en este punto nuestras 5 variables de interes ya estaran cargadas, entonces 
-                                        latitud: Number(lat),   //cargamos nuetro arreglo 'information' con un nuevo objeto con las caracteristicas de las 5 variables
-                                        longitud: Number(long),
-                                        precio: Number(pre),
-                                        seccion: sec,
-                                        tipo: tip,
-                                        municipio: mun,
-                                        distrito: '',
-                                        otb: ''
-                                    });
+                        var punto2 = require('../../src/app/Models/distrito.js');
+                        punto2.find(function (err, post2) {
+                            if (err) return err;
+                            else {
+                                llenar(post1, 1);
+                                llenar(post2, 2);
+                                var lat, long, pre, sec, tip, mun, dis, otb;   // variables para cargar datos de interes, latitud, longitud, precio, seccion, tipo
+                                for (let item of miArray) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
+                                    if (!item.text) {
+                                        if (item.latitud) {
+                                            lat = item.latitud;
+                                        }
+                                        if (item.longitud) {
+                                            long = item.longitud;
+                                        }
+                                        if (item.precio) {
+                                            pre = item.precio;
+                                        }
+                                        if (item.seccion) {
+                                            sec = item.seccion;
+                                        }
+                                        if (item.tipo) {
+                                            tip = item.tipo;
+                                            mun = verificar(Number(lat), Number(long), 1);
+                                            dist = verificar(Number(lat), Number(long), 2)
+                                            information.push({          //en este punto nuestras 5 variables de interes ya estaran cargadas, entonces 
+                                                latitud: Number(lat),   //cargamos nuetro arreglo 'information' con un nuevo objeto con las caracteristicas de las 5 variables
+                                                longitud: Number(long),
+                                                precio: Number(pre),
+                                                seccion: sec,
+                                                tipo: tip,
+                                                municipio: mun,
+                                                distrito: dist,
+                                                otb: ''
+                                            });
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        })
                     }
                 })
-                //console.log(verificarMun(information[0].latitud, information[0].longitud),'jijj');  //imprimimos todo el arreglo de 'information', este contiene toda la informacion de los pines 
             })
         );
 }
@@ -191,6 +232,17 @@ router.get('/scrap', (req, res) => {
 
 router.get('/municipios', (req, res) => {
     var usuario = require('../../src/app/Models/punto.js');
+    usuario.find(function (err, post) {
+        if (err) return;
+        else {
+            res.json(post);
+        }
+    });
+
+});
+
+router.get('/distritos', (req, res) => {
+    var usuario = require('../../src/app/Models/distrito.js');
     usuario.find(function (err, post) {
         if (err) return;
         else {

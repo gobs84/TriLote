@@ -12,6 +12,7 @@ import { DataService } from '../../services/data.service';
 export class BlankPageComponent implements OnInit {
     showMenu: string = '';
     municipios = [];
+    distritos =[];
 //    Variables para estadisticas con todos los datos
     items = [];
     precios = [];
@@ -250,6 +251,35 @@ export class BlankPageComponent implements OnInit {
                 }
             }
             console.log('municipios:',this.municipios);
+        },
+        error => {
+            console.log(error);
+        });
+        this._dataService.getDistritos()
+        .subscribe(response => {
+            var datos = <Array<any>>response;
+            datos.sort((n1,n2) => n1.ID - n2.ID)
+            var count = -1;
+            var nombre = "";
+            for(let dato of datos) {
+                if(dato.Nomb_dist === nombre){
+                    this.distritos[count].puntos.push({
+                        lat : dato.LNG,
+                        lng : dato.LAT
+                    })
+                }else{
+                    count++;
+                    nombre =dato.Nomb_dist;
+                    this.distritos.push({
+                        nombre : dato.Nomb_dist,
+                        puntos : [{
+                            lat : dato.LNG,
+                            lng : dato.LAT
+                        }]
+                    });
+                }
+            }
+            console.log('distritos:',this.distritos);
         },
         error => {
             console.log(error);

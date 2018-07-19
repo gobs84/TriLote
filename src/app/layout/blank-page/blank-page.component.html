@@ -11,7 +11,13 @@
                 </div>
                 <div>
                     <h6>{{item.municipio}}</h6>
-                 </div>
+                </div>
+                <div *ngIf="otbsFlag">
+                    <h6>{{item.otb}}</h6>
+                </div>
+                <div *ngIf="distritosFlag">
+                    <h6>{{item.distrito}}</h6>
+                </div>
                 <div>
                     <h6>{{item.seccion}}</h6>
                 </div>
@@ -20,12 +26,24 @@
                 </div>
             </agm-info-window>      
         </agm-marker>
-        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="red"
+        <div *ngIf='!otbsFlag && !distritosFlag'>
+        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#DC143C'"
                [fillOpacity]="0.2" [paths]="municipio.puntos"
-               [strokeColor]="blue" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" [zIndex]="1"></agm-polygon>
-        <agm-kml-layer [url]="otbsKmlUrl" *ngIf="otbsFlag"></agm-kml-layer>
-        <agm-kml-layer [url]="distritosKmlUrl" *ngIf="distritosFlag"></agm-kml-layer>
+        </div>
+        <div *ngIf='otbsFlag' >
+        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#DC143C'"
+               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" [zIndex]="1"></agm-polygon>
+        </div>
+        <div *ngIf='distritosFlag'>
+        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#DC143C'"
+               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" [zIndex]="1"></agm-polygon>
+        </div>
 	</agm-map>&nbsp;   
         <fieldset class="form-group">
             <label>MAPA</label>
