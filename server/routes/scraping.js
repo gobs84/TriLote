@@ -251,5 +251,27 @@ router.get('/distritos', (req, res) => {
     });
 
 });
+
+router.get('/avisos', (req, res) => {
+    information.forEach(element => {
+        var dt = new Date;
+        var Aviso = require('../../src/app/Models/aviso.js');
+        var aviso = new Aviso({
+            latitud : element.latitud,
+            longitud : element.longitud,
+            precio: element.precio,
+            seccion : element.seccion,
+            tipo : element.tipo,
+            municipio : element.municipio,
+            distrito : element.distrito,
+            otb: element.otb,
+            dia : dt.getDate(),
+            mes : (dt.getMonth()+1)
+        });
+        aviso.save();
+    });
+    res.json('avisos guardados en la base de datos')
+
+});
 //  esto permite q el serve pueda hacer uso del servicio generado
 module.exports = router;
