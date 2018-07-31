@@ -9,7 +9,8 @@ var avisoSchema = mongoose.Schema({
    distrito : String,
    otb: String,
    dia: Number,
-   mes: Number
+   mes: Number,
+   year: Number
 });
 
 module.exports=mongoose.model('avisos',avisoSchema,'avisos');
