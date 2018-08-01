@@ -24,5 +24,8 @@ export class DataService {
   getDistritos(){
     return this._http.get("http://localhost:3000/api/distritos");
   }
+  getOtbs(){
+    return this._http.get("http://localhost:3000/api/otbs")
+  }
 
 }
