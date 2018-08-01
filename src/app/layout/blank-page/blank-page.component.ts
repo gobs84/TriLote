@@ -13,6 +13,7 @@ export class BlankPageComponent implements OnInit {
     showMenu: string = '';
     municipios = [];
     distritos =[];
+    otbs =[];
 //    Variables para estadisticas con todos los datos
     items = [];
     precios = [];
@@ -284,7 +285,35 @@ export class BlankPageComponent implements OnInit {
         error => {
             console.log(error);
         });
-
+        this._dataService.getOtbs()
+        .subscribe(response => {
+            var datos = <Array<any>>response;
+            datos.sort((n1,n2) => n1.ID - n2.ID)
+            var count = -1;
+            var nombre = "";
+            for(let dato of datos) {
+                if(dato.OTB === nombre){
+                    this.otbs[count].puntos.push({
+                        lat : dato.Lng,
+                        lng : dato.Lat
+                    })
+                }else{
+                    count++;
+                    nombre =dato.OTB;
+                    this.otbs.push({
+                        nombre : dato.OTB,
+                        puntos : [{
+                            lat : dato.Lng,
+                            lng : dato.Lat
+                        }]
+                    });
+                }
+            }
+            console.log('otbs:',this.otbs);
+        },
+        error => {
+            console.log(error);
+        });
 
     }
 //    Metodo para controlar los botones de radio, Global, Distritos, Otb's

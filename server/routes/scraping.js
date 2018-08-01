@@ -92,7 +92,7 @@ function llenar(post, x) {
     else if (x == 2) {
         distritos = [];
     }
-    else if (x == 2) {
+    else if (x == 3) {
         otbs = [];
     }
     else { return; }
@@ -133,7 +133,21 @@ function llenar(post, x) {
             distrito.puntos.push(distrito.puntos[0]);
         }
     } else if (x == 3) {
-        // aun nada
+        for (let dato of datosmun) {
+            if (dato.OTB === nombre) {
+                otbs[count].puntos.push([dato.Lng, dato.Lat])
+            } else {
+                count++;
+                nombre = dato.OTB;
+                otbs.push({
+                    nombre: dato.OTB,
+                    puntos: [[dato.Lng, dato.Lat]]
+                });
+            }
+        }
+        for (let otb of otbs) {
+            otb.puntos.push(otb.puntos[0]);
+        }
     }
 }
 
@@ -154,43 +168,51 @@ function scrap() {
                     if (err) return err;
                     else {
                         var punto2 = require('../../src/app/Models/distrito.js');
-                        punto2.find(function (err, post2) {
-                            if (err) return err;
+                        punto2.find(function (err2, post2) {
+                            if (err2) return err2;
                             else {
-                                llenar(post1, 1);
-                                llenar(post2, 2);
-                                var lat, long, pre, sec, tip, mun, dis, otb;   // variables para cargar datos de interes, latitud, longitud, precio, seccion, tipo
-                                for (let item of miArray) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
-                                    if (!item.text) {
-                                        if (item.latitud) {
-                                            lat = item.latitud;
-                                        }
-                                        if (item.longitud) {
-                                            long = item.longitud;
-                                        }
-                                        if (item.precio) {
-                                            pre = item.precio;
-                                        }
-                                        if (item.seccion) {
-                                            sec = item.seccion;
-                                        }
-                                        if (item.tipo) {
-                                            tip = item.tipo;
-                                            mun = verificar(Number(lat), Number(long), 1);
-                                            dist = verificar(Number(lat), Number(long), 2)
-                                            information.push({          //en este punto nuestras 5 variables de interes ya estaran cargadas, entonces 
-                                                latitud: Number(lat),   //cargamos nuetro arreglo 'information' con un nuevo objeto con las caracteristicas de las 5 variables
-                                                longitud: Number(long),
-                                                precio: Number(pre),
-                                                seccion: sec,
-                                                tipo: tip,
-                                                municipio: mun,
-                                                distrito: dist,
-                                                otb: ''
-                                            });
+                                var punto3 = require('../../src/app/Models/otb.js');
+                                punto3.find(function (err3, post3) {
+                                    if (err3) return err3;
+                                    else {
+                                        llenar(post1, 1);
+                                        llenar(post2, 2);
+                                        llenar(post3, 3)
+                                        var lat, long, pre, sec, tip, mun, dist, otb;   // variables para cargar datos de interes, latitud, longitud, precio, seccion, tipo
+                                        for (let item of miArray) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
+                                            if (!item.text) {
+                                                if (item.latitud) {
+                                                    lat = item.latitud;
+                                                }
+                                                if (item.longitud) {
+                                                    long = item.longitud;
+                                                }
+                                                if (item.precio) {
+                                                    pre = item.precio;
+                                                }
+                                                if (item.seccion) {
+                                                    sec = item.seccion;
+                                                }
+                                                if (item.tipo) {
+                                                    tip = item.tipo;
+                                                    mun = verificar(Number(lat), Number(long), 1);
+                                                    dist = verificar(Number(lat), Number(long), 2);
+                                                    otb = verificar(Number(lat), Number(long), 3);
+                                                    information.push({          //en este punto nuestras 5 variables de interes ya estaran cargadas, entonces 
+                                                        latitud: Number(lat),   //cargamos nuetro arreglo 'information' con un nuevo objeto con las caracteristicas de las 5 variables
+                                                        longitud: Number(long),
+                                                        precio: Number(pre),
+                                                        seccion: sec,
+                                                        tipo: tip,
+                                                        municipio: mun,
+                                                        distrito: dist,
+                                                        otb: otb
+                                                    });
+                                                }
+                                            }
                                         }
                                     }
-                                }
+                                })
                             }
                         })
                     }
@@ -243,6 +265,17 @@ router.get('/municipios', (req, res) => {
 
 router.get('/distritos', (req, res) => {
     var usuario = require('../../src/app/Models/distrito.js');
+    usuario.find(function (err, post) {
+        if (err) return;
+        else {
+            res.json(post);
+        }
+    });
+
+});
+
+router.get('/otbs', (req, res) => {
+    var usuario = require('../../src/app/Models/otb.js');
     usuario.find(function (err, post) {
         if (err) return;
         else {
