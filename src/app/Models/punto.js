@@ -1,16 +1,10 @@
 var mongoose = require('mongoose');
 var puntoSchema = mongoose.Schema({
    ID: Number,
-   MUNICIPIO : String,
-   POINT_X : Number,
-   POINT_Y : Number
+   NOM_MUN : String,
+   lat : Number,
+   lng : Number
 });
-
-var userSchema = mongoose.Schema({
-    name: String,
-    password : String
- });
- 
 //module.exports=mongoose.model('Municipios',puntoSchema);
 
-module.exports=mongoose.model('Municipios',puntoSchema,'Municipios');
+module.exports=mongoose.model('municipios',puntoSchema,'municipios');

@@ -26,6 +26,7 @@
         "@ng-bootstrap/ng-bootstrap": "^2.0.0",
         "@ngx-translate/core": "^10.0.1",
         "@ngx-translate/http-loader": "^3.0.1",
+        "@turf/turf": "^5.1.6",
         "body-parser": "^1.18.3",
         "browserify": "^16.2.2",
         "chart.js": "^2.7.2",

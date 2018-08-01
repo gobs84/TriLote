@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 var cors = require('cors');
-var mongoose = require('mongoose');
+/*var mongoose = require('mongoose');
 var config = require('./config/DB');
 
 //	busca y conecta con la base de datos
@@ -11,17 +11,9 @@ var config = require('./config/DB');
           if(err){console.log(err);}
           //else{console.log("connected: "+db,' + ',response);}
       });
-
-      
-    
-      var db1 =mongoose.connection;
-      db1.on('error',console.error.bind(console,'error'));
-      db1.once('open',function(){
-          console.log(':)');
-      });
         
     
-
+*/
 const app = express();
 app.use(cors())
 //	llama a esta ruta
@@ -38,11 +30,11 @@ app.use(express.static(path.join(__dirname, 'src')));
 app.use('/api', api);
 
 // Send all other requests to the Angular app
-app.get('map', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/index.html'));
 });
 
-var usuario = require('./src/app/Models/punto.js')
+/*var usuario = require('./src/app/Models/punto.js')
 app.get('/p', function(req,res,next){
     usuario.find(function(err,post){
         if(err) return next(err);
@@ -50,7 +42,7 @@ app.get('/p', function(req,res,next){
             res.json(post);
         }
     });
- });
+ });*/
 
 //Set Port
 const port = process.env.PORT || '3000';

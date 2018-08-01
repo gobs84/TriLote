@@ -39,7 +39,8 @@ export const createTranslateLoader = (http: HttpClient) => {
         }),
         AppRoutingModule,
         AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyB0JrpDZNJmHRd4YbrYOHOUdZsHL3QS-DU'
+      apiKey: 'AIzaSyB0JrpDZNJmHRd4YbrYOHOUdZsHL3QS-DU',
+      libraries: ['geometry']
     })
     ],
     declarations: [AppComponent],

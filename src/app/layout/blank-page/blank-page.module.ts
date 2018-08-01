@@ -11,7 +11,8 @@ import { PageHeaderModule } from '../../shared';
 @NgModule({
     imports: [CommonModule, BlankPageRoutingModule,Ng2Charts,PageHeaderModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyB0JrpDZNJmHRd4YbrYOHOUdZsHL3QS-DU'
+      apiKey: 'AIzaSyB0JrpDZNJmHRd4YbrYOHOUdZsHL3QS-DU',
+      libraries: ['geometry']
     })],
     providers: [GoogleMapsAPIWrapper],
     declarations: [BlankPageComponent]
