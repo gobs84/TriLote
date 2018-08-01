@@ -394,7 +394,6 @@ googletag.cmd.push(function() { googletag.display('div-gpt-ad-1521142260541-0');
     
     <div class="block-content">
       <div class="view view-mapas-anuncios-aprobados view-id-mapas_anuncios_aprobados view-display-id-inmuebles_mapas view-dom-id-26ff45cb349a93f4c86266d9d75a8120">
-      
       <div class="view-filters">
       <form action="/inmuebles-mapa" method="get" id="views-exposed-form-mapas-anuncios-aprobados-inmuebles-mapas" accept-charset="UTF-8"><div><div class="head-exposed-links">
 
@@ -557,7 +556,6 @@ googletag.cmd.push(function() { googletag.display('div-gpt-ad-1466866242000-0');
 
 </div>
   <script type="text/javascript" src="https://clasificados.lostiempos.com/sites/all/themes/clasificadoslt/scripts/media_queries.js?pcj4gq"></script>
-
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
