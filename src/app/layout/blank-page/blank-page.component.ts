@@ -632,6 +632,10 @@ export class BlankPageComponent implements OnInit {
     cargarGraficaArea(lote : any, depa: any, casa: any, loca: any) {
         this.polarAreaChartData = [lote.length,depa.length,casa.length,loca.length];
     }
+
+    clicked(nombre){
+        console.log(nombre);
+    }
 }
 
 //Interfaz para tener variable con estas caracteristicas
