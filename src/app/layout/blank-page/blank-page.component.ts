@@ -14,6 +14,10 @@ export class BlankPageComponent implements OnInit {
     municipios = [];
     distritos =[];
     otbs =[];
+    av = [];
+    mediafiltrada = 0;
+    variablefiltrada='Filtro';
+    filtro = 'municipio';
 //    Variables para estadisticas con todos los datos
     items = [];
     precios = [];
@@ -315,7 +319,68 @@ export class BlankPageComponent implements OnInit {
             console.log(error);
         });
 
+        this._dataService.getAvisos()
+        .subscribe(response => {
+            var datos = <Array<any>>response;
+            for(let dato of datos) {
+                this.av.push({
+                    precio:dato.precio,
+                    seccion : dato.seccion,
+                    tipo : dato.tipo,
+                    municipio : dato.municipio,
+                    distrito : dato.distrito,
+                    otb: dato.otb,
+                    dia: dato.dia,
+                    mes: dato.mes,
+                    year: dato.year
+                });
+            }
+            console.log('avisos:',this.av);
+        },
+        error => {
+            console.log(error);
+        });
     }
+
+    calculoMedia(filtro:string, variable:string){
+        this.mediafiltrada = 1;
+        var quantity=0;
+        switch(filtro){
+            case "municipio":
+            for(let aviso of this.av){
+                if(aviso.municipio===variable){
+                    this.mediafiltrada += aviso.precio;
+                    quantity++;
+                }
+            }
+            if (quantity ===0) this.mediafiltrada =0;
+            else this.mediafiltrada = (this.mediafiltrada/quantity);
+            break;
+
+            case "distrito":
+            for(let aviso of this.av){
+                if(aviso.distrito===variable){
+                    this.mediafiltrada += aviso.precio;
+                    quantity++;
+                }
+            }
+            if (quantity ===0) this.mediafiltrada =0;
+            else this.mediafiltrada = (this.mediafiltrada/quantity);
+            break;
+
+            case "otb":
+            for(let aviso of this.av){
+                if(aviso.otb===variable){
+                    this.mediafiltrada += aviso.precio;
+                    quantity++;
+                }
+            }
+            if (quantity ===0) this.mediafiltrada =0;
+            else this.mediafiltrada = (this.mediafiltrada/quantity);
+            break;
+        }
+    }
+
 //    Metodo para controlar los botones de radio, Global, Distritos, Otb's
     radioButtonChange(event) {
         var id = event.target.id;
@@ -323,12 +388,15 @@ export class BlankPageComponent implements OnInit {
         if(id === 'otbs') {
             this.otbsFlag = true;
             this.distritosFlag = false;
+            this.filtro = 'otb';
         }else if(id === 'distritos') {
             this.distritosFlag = true;
             this.otbsFlag = false;
+            this.filtro = 'distrito';
         }else {
             this.otbsFlag = false;
             this.distritosFlag = false;
+            this.filtro = 'municipio';
         }
     }
 //    Metodo encargado de cargar todos los datos a las graficas y de contener los metodos de los calculos
@@ -634,7 +702,8 @@ export class BlankPageComponent implements OnInit {
     }
 
     clicked(nombre){
-        console.log(nombre);
+        this.variablefiltrada=nombre;
+        this.calculoMedia(this.filtro,nombre);
     }
 }
 

@@ -2,6 +2,18 @@ agm-map {
   height: 500px;
   width: 1000px;
 }
+div.box {
+    background-color: rgb(4, 33, 114);
+    width: 300px;
+    border: 5px solid blue;
+    margin: 25px;
+    position: absolute;
+}
+
+p.sc{
+    font-size: 20px;
+    color: white 
+}
 
 .nested-menu {
     .list-group-item {
@@ -34,3 +46,4 @@ agm-map {
         }
     }
 }
+

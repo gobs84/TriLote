@@ -28,4 +28,9 @@ export class DataService {
     return this._http.get("http://localhost:3000/api/otbs")
   }
 
+  getAvisos(){
+    return this._http.get("http://localhost:3000/api/avisos");
+  }
+
+
 }

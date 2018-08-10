@@ -1,5 +1,5 @@
 <div>
-	<i>HELLO WORLD</i><input type="text" id="address" size="30">&nbsp;<i>Lat: {{lat}}</i>&nbsp;<i>Long: {{lng}}</i>
+	<p class="marg">Mapa genial</p>
 </div>
 
 <div class="row">
@@ -44,7 +44,15 @@
                [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
-	</agm-map>&nbsp;   
+    </agm-map>&nbsp;
+    
+    <div class="box"> 
+        
+        <p class="sc">{{variablefiltrada}} <br>
+        Media: {{mediafiltrada}}</p>
+        
+        
+     </div>
         <fieldset class="form-group">
             <label>MAPA</label>
             <div class="radio">
@@ -64,7 +72,7 @@
             </div>
         </fieldset>&nbsp;
 
-        <button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
+         <button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
 </div>
 
 <br>

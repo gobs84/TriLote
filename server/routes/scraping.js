@@ -259,11 +259,13 @@ let response = {
 
 // Get users / servicio generado por el server para poder acceder a los datos mediante el path
 router.get('/users', (req, res) => {
-    saveData();
     response.data = information;
     res.json(response);
+});
 
-
+router.get('/saveapi', (req, res) => {
+    saveData();
+    res.json('guardando datos');
 });
 
 router.get('/scrap', (req, res) => {
