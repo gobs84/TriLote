@@ -287,15 +287,6 @@ router.get('/municipios', (req, res) => {
 
 });
 
-router.get('/municipios/:municipio', (req, res) => {
-    var mun = require('../../src/app/Models/punto.js');
-    mun.find({'MUNICIPIO': req.params.municipio},function(err,post){
-        if(err)return;
-        else{
-            res.json(post);
-        }
-    });
-});
 
 router.get('/distritos', (req, res) => {
     var usuario = require('../../src/app/Models/distrito.js');
@@ -308,15 +299,6 @@ router.get('/distritos', (req, res) => {
 
 });
 
-router.get('/distritos/:distrito', (req, res) => {
-    var dist = require('../../src/app/Models/distrito.js');
-    dist.find({'Nomb_dist':req.params.distrito},function (err, post) {
-      if (err) return;
-        else {
-            res.json(post);
-        }
-    });
-  });
 
 router.get('/otbs', (req, res) => {
     var usuario = require('../../src/app/Models/otb.js');
@@ -338,26 +320,6 @@ router.get('/avisos', (req, res) => {
     });
 });
 
-router.get('/avisos/:mes', (req, res) => {
-    var aviso = require('../../src/app/Models/aviso.js');
-    aviso.find({'mes':req.params.mes},function (err, post) {
-        if (err) return;
-        else {
-            res.json(post);
-        }
-    });
-});
-
-router.get('/avisos/year/:year/', (req, res) => {
-    var aviso = require('../../src/app/Models/aviso.js');
-    aviso.find({'year':req.params.year},function (err, post) {
-        if (err) return;
-        else {
-            res.json(post);
-        }
-    });
-});
-
 router.get('/avisos/mes/:year/:mes', (req, res) => {
     var aviso = require('../../src/app/Models/aviso.js');
     aviso.find({'year':req.params.year,'mes':req.params.mes},function (err, post) {
@@ -368,24 +330,7 @@ router.get('/avisos/mes/:year/:mes', (req, res) => {
     });
 });
 
-router.get('/avisos/dia/:year/:mes/:dia', (req, res) => {
-    var aviso = require('../../src/app/Models/aviso.js');
-    aviso.find({'mes':req.params.mes,'dia':req.params.dia},function (err, post) {
-        if (err) return;
-        else {
-            res.json(post);
-        }
-    });
-});
 
-router.get('/avisos/range/:year1/:mes1/:year2/:mes2', (req, res) => {
-    var aviso = require('../../src/app/Models/aviso.js');
-    aviso.find({'year':{'$gt':(req.params.year1-1),'$lt':(req.params.year2+1)},'mes':{'$gt':(req.params.mes1-1),'$lt':(req.params.mes2+1)}},function (err, post) {
-        if (err) return;
-        else {
-            res.json(post);
-        }
-    });
-});
+
 //  esto permite q el serve pueda hacer uso del servicio generado
 module.exports = router;

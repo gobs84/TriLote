@@ -28,19 +28,19 @@
         </agm-marker>
         <div *ngIf='!otbsFlag && !distritosFlag'>
         <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
                [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='otbsFlag' >
         <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
                [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='distritosFlag'>
         <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
                [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
