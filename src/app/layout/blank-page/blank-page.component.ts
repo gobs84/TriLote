@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { KmlLayerManager, AgmKmlLayer } from '@agm/core';
 import { DataService } from '../../services/data.service';
+import { element } from 'protractor';
 
 @Component({
     selector: 'app-blank-page',
@@ -402,7 +403,8 @@ export class BlankPageComponent implements OnInit {
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
-                        media: this.getMedia(dato.nombre, filtro)
+                        media: this.getMedia(dato.nombre, filtro),
+                        moda : 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
@@ -448,6 +450,204 @@ export class BlankPageComponent implements OnInit {
         }
         return media;
     }
+
+    getMediana(filtro, variable){
+        var mediana = 0;
+        var vector = [];
+        var aux = 0;
+        switch (filtro) {
+            case "municipio":
+                for (let aviso of this.av) {
+                    if (aviso.municipio === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+                vector.sort((n1, n2) => n1.media - n2.media);
+                aux = (vector.length/2)
+                if((aux % 2)===0)
+                    mediana = (vector[aux-1]+vector[aux])/2
+                else
+                    mediana = vector[aux]
+                break;
+            case "distrito":
+                for (let aviso of this.av) {
+                    if (aviso.distrito === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+                vector.sort((n1, n2) => n1.media - n2.media);
+                aux = (vector.length/2)
+                if((aux % 2)===0)
+                    mediana = (vector[aux-1]+vector[aux])/2
+                else
+                    mediana = vector[aux]
+                break;
+            case "otb":
+                for (let aviso of this.av) {
+                    if (aviso.otb === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+                vector.sort((n1, n2) => n1.media - n2.media);
+                aux = (vector.length/2)
+                if((aux % 2)===0)
+                    mediana = (vector[aux-1]+vector[aux])/2
+                else
+                    mediana = vector[aux]
+                break;
+        }
+        return mediana;
+    }
+
+    getMax(filtro, variable){
+        var max = 0;
+        switch (filtro) {
+            case "municipio":
+                for (let aviso of this.av) {
+                    if (aviso.municipio === variable) {
+                        if(aviso.precio>max)
+                        max = aviso.precio;
+                    }
+                }
+                break;
+            case "distrito":
+                for (let aviso of this.av) {
+                    if (aviso.distrito === variable) {
+                        if(aviso.precio>max)
+                        max = aviso.precio;
+                    }
+                }
+                break;
+            case "otb":
+                for (let aviso of this.av) {
+                    if (aviso.otb === variable) {
+                        if(aviso.precio>max)
+                            max = aviso.precio;
+                    }
+                }
+        }
+        return max;
+    }
+
+    getMin(filtro, variable){
+        var min = 0;
+        
+        switch (filtro) {
+            case "municipio":
+                for (let aviso of this.av) {
+                    if (aviso.municipio === variable) {
+                        min = aviso.precio;
+                        break;
+                    }
+                }
+                for (let aviso of this.av) {
+                    if (aviso.municipio === variable) {
+                        if(aviso.precio<min)
+                        min = aviso.precio;
+                    }
+                }
+                break;
+            case "distrito":
+                for (let aviso of this.av) {
+                    if (aviso.distrito === variable) {
+                        min = aviso.precio;
+                        break;
+                    }
+                }
+                for (let aviso of this.av) {
+                    if (aviso.distrito === variable) {
+                        if(aviso.precio<min)
+                        min = aviso.precio;
+                    }
+                }
+                break;
+            case "otb":
+                for (let aviso of this.av) {
+                    if (aviso.otb === variable) {
+                        min = aviso.precio;
+                        break;
+                    }
+                }
+                for (let aviso of this.av) {
+                    if (aviso.otb === variable) {
+                        if(aviso.precio<min)
+                            min = aviso.precio;
+                    }
+                }
+        }
+        return min;
+    }
+
+    getModa(filtro, variable){
+        var moda = 0;
+        var count = 0;
+        var counter =0;
+        var vector = [];
+        var moda2 = 0;
+        switch (filtro) {
+            case "municipio":
+                for (let aviso of this.av) {
+                    if (aviso.municipio === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+
+                moda2 = vector[0];
+                for(let element of vector){
+                    if(element = moda){
+                        count++;
+                    }
+
+                    if(count>counter){
+                        counter = count;
+                        moda = moda2;
+                    }
+                }
+                
+                break;
+            case "distrito":
+                for (let aviso of this.av) {
+                    if (aviso.distrito === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+
+                moda2 = vector[0];
+                for(let element of vector){
+                    if(element = moda){
+                        count++;
+                    }
+
+                    if(count>counter){
+                        counter = count;
+                        moda = moda2;
+                    }
+                }
+
+                
+                break;
+            case "otb":               
+                for (let aviso of this.av) {
+                    if (aviso.otb === variable) {
+                        vector.push(aviso.precio);
+                    }
+                }
+
+                moda2 = vector[0];
+                for(let element of vector){
+                    if(element = moda){
+                        count++;
+                    }
+
+                    if(count>counter){
+                        counter = count;
+                        moda = moda2;
+                    }
+                }
+        }
+        return moda;
+    }
+    
 
     //    Metodo para controlar los botones de radio, Global, Distritos, Otb's
     radioButtonChange(event) {
@@ -810,7 +1010,29 @@ export class BlankPageComponent implements OnInit {
     }
 
     clicked(nombre) {
-
+        switch(this.filtro){
+            case "municipio":
+            for(let element of this.preciosMediaMunicipio){
+                if(element.nombre === nombre)
+                this.mediafiltrada = element.media;
+                this.variablefiltrada = nombre;
+            }
+            break;
+            case "distrito":
+            for(let element of this.preciosMediaDistrito){
+                if(element.nombre === nombre)
+                this.mediafiltrada = element.media;
+                this.variablefiltrada = nombre;
+            }
+            break;
+            case "otb":
+            for(let element of this.preciosMediaOtb){
+                if(element.nombre === nombre)
+                this.mediafiltrada = element.media;
+                this.variablefiltrada = nombre;
+            }
+            break;
+        }
     }
 }
 

@@ -153,7 +153,7 @@ function llenar(post, x) {
 
 function scrap() {
     const requesturl = "https://clasificados.lostiempos.com/inmuebles-mapa";
-
+    information = [];
     fetch(requesturl)   //obtenemos la informacion de la pagina requerida
         .then(response => response.text())  //especificamos el formato de la respuesta
         .then(body => fs.writeFile(archivo, body,   //cargamos la informacion y se almacena en la variable 'body'
@@ -265,7 +265,7 @@ router.get('/users', (req, res) => {
 
 router.get('/saveapi', (req, res) => {
     saveData();
-    res.json('guardando datos');
+    res.json('guardando datos' + information.length);
 });
 
 router.get('/scrap', (req, res) => {
