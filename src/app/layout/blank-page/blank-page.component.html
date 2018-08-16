@@ -3,8 +3,8 @@
 </div>
 
 <div class="row">
-	<agm-map [latitude]="lat" [longitude]="lng" (mapClick)="click($event)" [zoom]="13">
-		<agm-marker *ngFor="let item of items" [latitude]="item.latitud" [longitude]="item.longitud">
+	<agm-map [latitude]="lat" [longitude]="lng" [mapTypeId]= "'satellite'" (mapClick)="click($event)" [zoom]="13">
+	     <!--<agm-marker *ngFor="let item of items" [latitude]="item.latitud" [longitude]="item.longitud">
             <agm-info-window [disableAutoPan]="false" #infoWindow>
                 <div>
                    <h6>{{item.tipo}}</h6>
@@ -25,23 +25,23 @@
                     <h6>$ {{item.precio}}</h6>
                 </div>
             </agm-info-window>      
-        </agm-marker>
+        </agm-marker>-->
         <div *ngIf='!otbsFlag && !distritosFlag'>
-        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#DC143C'"
+        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#0000FF'"
                [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='otbsFlag' >
-        <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#DC143C'"
+        <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#0000FF'"
                [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='distritosFlag'>
-        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#DC143C'"
+        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#0000FF'"
                [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
                [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
     </agm-map>&nbsp;
@@ -68,6 +68,34 @@
             <div class="radio">
                 <label>
                     <input type="radio" name="optionsRadios" id="otbs" value="option3" (change)="radioButtonChange($event)"> OTB's
+                </label>
+            </div>
+        </fieldset>&nbsp;
+        <fieldset class="form-group2">
+            <label>Estadisticas</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="media" value="option1" checked="" (change)="setestadistica($event)"> Media
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="moda" value="option2" (change)="setestadistica($event)"> Moda
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="mediana" value="option3" (change)="setestadistica($event)"> Mediana
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="max" value="option4" (change)="setestadistica($event)"> Valor maximo
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="min" value="option5" (change)="setestadistica($event)"> Valor minimo
                 </label>
             </div>
         </fieldset>&nbsp;
