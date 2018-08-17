@@ -608,14 +608,14 @@ export class BlankPageComponent implements OnInit {
                         });
                     }
                 }
-                if(vector.length >= 2){
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux].precio
-                }
+                    mediana = vector[aux].precio;
                 break;
             case "distrito":
                 for (let aviso of this.av) {
@@ -626,11 +626,13 @@ export class BlankPageComponent implements OnInit {
                     }
                 }
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux].precio
+                    mediana = vector[aux].precio;
                 break;
             case "otb":
                 for (let aviso of this.av) {
@@ -641,11 +643,13 @@ export class BlankPageComponent implements OnInit {
                     }
                 }
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux].precio
+                    mediana = vector[aux].precio;
                 break;
         }
         return mediana;
@@ -746,18 +750,18 @@ export class BlankPageComponent implements OnInit {
                     }
                 }
 
-                moda2 = vector[0].precio;
                 for(let element of vector){
-                    if(element === moda2){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
-                
                 break;
             case "distrito":
                 for (let aviso of this.av) {
@@ -768,19 +772,18 @@ export class BlankPageComponent implements OnInit {
                     }
                 }
 
-                moda2 = vector[0].precio;
                 for(let element of vector){
-                    if(element.precio === moda2){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
-
-                
                 break;
             case "otb":
                 for (let aviso of this.av) {
@@ -791,16 +794,17 @@ export class BlankPageComponent implements OnInit {
                     }
                 }
 
-                moda2 = vector[0].precio;
                 for(let element of vector){
-                    if(element.precio === moda2){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
         }
         return moda;
