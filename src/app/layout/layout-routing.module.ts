@@ -11,7 +11,8 @@ const routes: Routes = [
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' },
             { path: 'quienes-somos', loadChildren: './quienes-somos/quienes-somos.module#QuienesSomosModule' },
-            { path: 'scraping', loadChildren: './scraping/scraping.module#ScrapingModule' }
+            { path: 'scraping', loadChildren: './scraping/scraping.module#ScrapingModule' },
+            { path: 'statistics-page', loadChildren: './statistics-page/statistics-page.module#StatisticsPageModule' }
         ]
     }
 ];
