@@ -382,6 +382,7 @@ export class BlankPageComponent implements OnInit {
     vectorMedia(filtro) {
         switch (filtro) {
             case "municipio":
+                this.preciosMediaMunicipio = [];
                 for (let dato of this.municipios) {
                     this.preciosMediaMunicipio.push({
                         nombre: dato.nombre,
@@ -391,6 +392,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
+                this.preciosMediaDistrito =[];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -400,6 +402,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "otb":
+                this.preciosMediaOtb = [];
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
@@ -410,9 +413,150 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
                 break;
         }
+    }
+    vectorModa(filtro) {
+        switch (filtro) {
+            case "municipio":
+            this.preciosMediaMunicipio =[];
+                for (let dato of this.municipios) {
+                    this.preciosMediaMunicipio.push({
+                        nombre: dato.nombre,
+                        media: this.getModa(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "distrito":
+            this.preciosMediaDistrito =[];
+                for (let dato of this.distritos) {
+                    this.preciosMediaDistrito.push({
+                        nombre: dato.nombre,
+                        media: this.getModa(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "otb":
+            this.preciosMediaOtb =[];
+                for (let dato of this.otbs) {
+                    this.preciosMediaOtb.push({
+                        nombre: dato.nombre,
+                        media: this.getModa(dato.nombre, filtro),
+                        moda : 0
+                    })
+                }
+                this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
+                break;
+        }
+     }
+    vectorMediana(filtro) {
+        switch (filtro) {
+            case "municipio":
+            this.preciosMediaMunicipio =[];
+                for (let dato of this.municipios) {
+                    this.preciosMediaMunicipio.push({
+                        nombre: dato.nombre,
+                        media: this.getMediana(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "distrito":
+            this.preciosMediaDistrito =[];
+                for (let dato of this.distritos) {
+                    this.preciosMediaDistrito.push({
+                        nombre: dato.nombre,
+                        media: this.getMediana(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "otb":
+            this.preciosMediaOtb =[];
+                for (let dato of this.otbs) {
+                    this.preciosMediaOtb.push({
+                        nombre: dato.nombre,
+                        media: this.getMediana(dato.nombre, filtro),
+                        moda : 0
+                    })
+                }
+                this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
+                break;
+        }
+     }
+    vectorMax(filtro) {
+        switch (filtro) {
+            case "municipio":
+            this.preciosMediaMunicipio =[];
+                for (let dato of this.municipios) {
+                    this.preciosMediaMunicipio.push({
+                        nombre: dato.nombre,
+                        media: this.getMax(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "distrito":
+            this.preciosMediaDistrito =[];
+                for (let dato of this.distritos) {
+                    this.preciosMediaDistrito.push({
+                        nombre: dato.nombre,
+                        media: this.getMax(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "otb":
+            this.preciosMediaOtb =[];
+                for (let dato of this.otbs) {
+                    this.preciosMediaOtb.push({
+                        nombre: dato.nombre,
+                        media: this.getMax(dato.nombre, filtro),
+                        moda : 0
+                    })
+                }
+                this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
+                break;
+        }
+     }
+    vectorMin(filtro) {
+        switch (filtro) {
+            case "municipio":
+            this.preciosMediaMunicipio =[];
+                for (let dato of this.municipios) {
+                    this.preciosMediaMunicipio.push({
+                        nombre: dato.nombre,
+                        media: this.getMin(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "distrito":
+            this.preciosMediaDistrito =[];
+                for (let dato of this.distritos) {
+                    this.preciosMediaDistrito.push({
+                        nombre: dato.nombre,
+                        media: this.getMin(dato.nombre, filtro)
+                    })
+                }
+                this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
+                break;
+            case "otb":
+            this.preciosMediaOtb =[];
+                for (let dato of this.otbs) {
+                    this.preciosMediaOtb.push({
+                        nombre: dato.nombre,
+                        media: this.getMin(dato.nombre, filtro),
+                        moda : 0
+                    })
+                }
+                this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
+                break;
+        }
 
     }
 
+    
     getMedia(variable, filtro) {
         var media = 0;
         var quantity = 0;
@@ -451,7 +595,7 @@ export class BlankPageComponent implements OnInit {
         return media;
     }
 
-    getMediana(filtro, variable){
+    getMediana(variable, filtro){
         var mediana = 0;
         var vector = [];
         var aux = 0;
@@ -459,47 +603,59 @@ export class BlankPageComponent implements OnInit {
             case "municipio":
                 for (let aviso of this.av) {
                     if (aviso.municipio === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
-                vector.sort((n1, n2) => n1.media - n2.media);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1]+vector[aux])/2
+                vector.sort((n1, n2) => n1.precio - n2.precio);
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux]
+                    mediana = vector[aux].precio;
                 break;
             case "distrito":
                 for (let aviso of this.av) {
                     if (aviso.distrito === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
-                vector.sort((n1, n2) => n1.media - n2.media);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1]+vector[aux])/2
+                vector.sort((n1, n2) => n1.precio - n2.precio);
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux]
+                    mediana = vector[aux].precio;
                 break;
             case "otb":
                 for (let aviso of this.av) {
                     if (aviso.otb === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
-                vector.sort((n1, n2) => n1.media - n2.media);
-                aux = (vector.length/2)
-                if((aux % 2)===0)
-                    mediana = (vector[aux-1]+vector[aux])/2
+                vector.sort((n1, n2) => n1.precio - n2.precio);
+                aux = Math.trunc(vector.length/2)
+                if(vector.length === 0){
+                    mediana = 0;
+                }else if((vector.length % 2)===0)
+                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
                 else
-                    mediana = vector[aux]
+                    mediana = vector[aux].precio;
                 break;
         }
         return mediana;
     }
 
-    getMax(filtro, variable){
+    getMax(variable, filtro){
         var max = 0;
         switch (filtro) {
             case "municipio":
@@ -529,7 +685,7 @@ export class BlankPageComponent implements OnInit {
         return max;
     }
 
-    getMin(filtro, variable){
+    getMin(variable, filtro){
         var min = 0;
         
         switch (filtro) {
@@ -578,7 +734,7 @@ export class BlankPageComponent implements OnInit {
         return min;
     }
 
-    getModa(filtro, variable){
+    getModa(variable, filtro){
         var moda = 0;
         var count = 0;
         var counter =0;
@@ -588,61 +744,67 @@ export class BlankPageComponent implements OnInit {
             case "municipio":
                 for (let aviso of this.av) {
                     if (aviso.municipio === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
 
-                moda2 = vector[0];
                 for(let element of vector){
-                    if(element = moda){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
-                
                 break;
             case "distrito":
                 for (let aviso of this.av) {
                     if (aviso.distrito === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
 
-                moda2 = vector[0];
                 for(let element of vector){
-                    if(element = moda){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
-
-                
                 break;
-            case "otb":               
+            case "otb":
                 for (let aviso of this.av) {
                     if (aviso.otb === variable) {
-                        vector.push(aviso.precio);
+                        vector.push({
+                            precio : aviso.precio
+                        });
                     }
                 }
 
-                moda2 = vector[0];
                 for(let element of vector){
-                    if(element = moda){
-                        count++;
+                    moda2 = element.precio
+                    for(let dato of vector){
+                        if(dato.precio === moda2){
+                            count++;
+                        }   
                     }
-
                     if(count>counter){
                         counter = count;
                         moda = moda2;
-                    }
+                    }                
                 }
         }
         return moda;
@@ -666,6 +828,40 @@ export class BlankPageComponent implements OnInit {
             this.distritosFlag = false;
             this.filtro = 'municipio';
         }
+    }
+
+    setestadistica(event){
+        var id = event.target.id;
+        switch(id){
+            case "media":
+                this.vectorMedia("municipio");
+                this.vectorMedia("distrito");
+                this.vectorMedia("otb");
+            break;
+            case "moda":
+                this.vectorModa("municipio");
+                this.vectorModa("distrito");
+                this.vectorModa("otb");
+            break;
+            case "mediana":
+                this.vectorMediana("municipio");
+                this.vectorMediana("distrito");
+                this.vectorMediana("otb");
+            break;
+            case "max":
+                this.vectorMax("municipio");
+                this.vectorMax("distrito");
+                this.vectorMax("otb");
+            break;
+            case "min":
+                this.vectorMin("municipio");
+                this.vectorMin("distrito");
+                this.vectorMin("otb");
+            break;
+        }
+        this.setIntensidades(this.otbs, this.preciosMediaOtb);
+        this.setIntensidades(this.distritos, this.preciosMediaDistrito);
+        this.setIntensidades(this.municipios, this.preciosMediaMunicipio);
     }
     //    Metodo encargado de cargar todos los datos a las graficas y de contener los metodos de los calculos
     cargarDatos() {
