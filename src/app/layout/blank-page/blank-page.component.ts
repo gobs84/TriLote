@@ -16,11 +16,14 @@ export class BlankPageComponent implements OnInit {
     otbs = [];
     av = [];
     mediafiltrada = 0;
-    variablefiltrada = 'Filtro';
+    variablefiltrada = 'Click en un área';
     filtro = 'municipio';
+    filtrosec = 'casa';
+    filtrotipo = 'alquiler';
     preciosMediaMunicipio = [];
     preciosMediaDistrito = [];
     preciosMediaOtb = [];
+    opcion;
 
 
     onMouseOver(infoWindow, gm) {
@@ -30,7 +33,7 @@ export class BlankPageComponent implements OnInit {
         gm.lastOpen = infoWindow;
         infoWindow.open();
     }
-    
+
     //    Coordenadas iniciales del mapa
     lat: number = -17.382179;
     lng: number = -66.176434;
@@ -45,6 +48,7 @@ export class BlankPageComponent implements OnInit {
     //    Funciona como un constructor para angular, obtenemos los datos del server mediante un observable(subscribe)
     //    aprovechando la obtencion de los datos, realizamos la reparticion al resto de nuestras variables con los datos de interes
     ngOnInit() {
+        this.opcion = "Media";
         this._dataService.getAvisos()
             .subscribe(response => {
                 var datos = <Array<any>>response;
@@ -166,19 +170,31 @@ export class BlankPageComponent implements OnInit {
     }
     setIntensidades(vector1, vector2) {
         var indice = 0;
+        for (let dato of vector1) {
+            dato.intensidad = 0;
+        }
         for (let dato of vector2) {
             if (dato.media === 0) {
                 indice++;
             }
             else break;
         }
-        var intervalo = (vector2[vector2.length - 1].media - vector2[indice].media) / 5;
-        for (let dato of vector1) {
-            for (let dato2 of vector2) {
-                if (dato2.nombre === dato.nombre) {
-                    if (dato2.media != 0) {
-                        var a = dato2.media - vector2[indice].media;
-                        dato.intensidad = 0.1 + (a / intervalo) * 0.15;
+        if (vector2[vector2.length - 1] && vector2[indice]) {
+            if (indice == vector2.length - 1) {
+                for (let dato of vector1) {
+                    if(vector2[vector2.length - 1].nombre === dato.nombre)
+                    dato.intensidad = 0.8;
+                }
+            } else {
+                var intervalo = (vector2[vector2.length - 1].media - vector2[indice].media) / 5;
+                for (let dato of vector1) {
+                    for (let dato2 of vector2) {
+                        if (dato2.nombre === dato.nombre) {
+                            if (dato2.media != 0) {
+                                var a = dato2.media - vector2[indice].media;
+                                dato.intensidad = 0.1 + (a / intervalo) * 0.15;
+                            }
+                        }
                     }
                 }
             }
@@ -197,7 +213,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
-                this.preciosMediaDistrito =[];
+                this.preciosMediaDistrito = [];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -212,7 +228,7 @@ export class BlankPageComponent implements OnInit {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
                         media: this.getMedia(dato.nombre, filtro),
-                        moda : 0
+                        moda: 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
@@ -222,7 +238,7 @@ export class BlankPageComponent implements OnInit {
     vectorModa(filtro) {
         switch (filtro) {
             case "municipio":
-            this.preciosMediaMunicipio =[];
+                this.preciosMediaMunicipio = [];
                 for (let dato of this.municipios) {
                     this.preciosMediaMunicipio.push({
                         nombre: dato.nombre,
@@ -232,7 +248,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
-            this.preciosMediaDistrito =[];
+                this.preciosMediaDistrito = [];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -242,22 +258,22 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "otb":
-            this.preciosMediaOtb =[];
+                this.preciosMediaOtb = [];
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
                         media: this.getModa(dato.nombre, filtro),
-                        moda : 0
+                        moda: 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
                 break;
         }
-     }
+    }
     vectorMediana(filtro) {
         switch (filtro) {
             case "municipio":
-            this.preciosMediaMunicipio =[];
+                this.preciosMediaMunicipio = [];
                 for (let dato of this.municipios) {
                     this.preciosMediaMunicipio.push({
                         nombre: dato.nombre,
@@ -267,7 +283,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
-            this.preciosMediaDistrito =[];
+                this.preciosMediaDistrito = [];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -277,22 +293,22 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "otb":
-            this.preciosMediaOtb =[];
+                this.preciosMediaOtb = [];
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
                         media: this.getMediana(dato.nombre, filtro),
-                        moda : 0
+                        moda: 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
                 break;
         }
-     }
+    }
     vectorMax(filtro) {
         switch (filtro) {
             case "municipio":
-            this.preciosMediaMunicipio =[];
+                this.preciosMediaMunicipio = [];
                 for (let dato of this.municipios) {
                     this.preciosMediaMunicipio.push({
                         nombre: dato.nombre,
@@ -302,7 +318,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
-            this.preciosMediaDistrito =[];
+                this.preciosMediaDistrito = [];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -312,22 +328,22 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "otb":
-            this.preciosMediaOtb =[];
+                this.preciosMediaOtb = [];
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
                         media: this.getMax(dato.nombre, filtro),
-                        moda : 0
+                        moda: 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
                 break;
         }
-     }
+    }
     vectorMin(filtro) {
         switch (filtro) {
             case "municipio":
-            this.preciosMediaMunicipio =[];
+                this.preciosMediaMunicipio = [];
                 for (let dato of this.municipios) {
                     this.preciosMediaMunicipio.push({
                         nombre: dato.nombre,
@@ -337,7 +353,7 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaMunicipio.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "distrito":
-            this.preciosMediaDistrito =[];
+                this.preciosMediaDistrito = [];
                 for (let dato of this.distritos) {
                     this.preciosMediaDistrito.push({
                         nombre: dato.nombre,
@@ -347,12 +363,12 @@ export class BlankPageComponent implements OnInit {
                 this.preciosMediaDistrito.sort((n1, n2) => n1.media - n2.media);
                 break;
             case "otb":
-            this.preciosMediaOtb =[];
+                this.preciosMediaOtb = [];
                 for (let dato of this.otbs) {
                     this.preciosMediaOtb.push({
                         nombre: dato.nombre,
                         media: this.getMin(dato.nombre, filtro),
-                        moda : 0
+                        moda: 0
                     })
                 }
                 this.preciosMediaOtb.sort((n1, n2) => n1.media - n2.media);
@@ -361,14 +377,14 @@ export class BlankPageComponent implements OnInit {
 
     }
 
-    
+
     getMedia(variable, filtro) {
         var media = 0;
         var quantity = 0;
         switch (filtro) {
             case "municipio":
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         media += aviso.precio;
                         quantity++;
                     }
@@ -378,7 +394,7 @@ export class BlankPageComponent implements OnInit {
                 break;
             case "distrito":
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         media += aviso.precio;
                         quantity++;
                     }
@@ -388,7 +404,7 @@ export class BlankPageComponent implements OnInit {
                 break;
             case "otb":
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         media += aviso.precio;
                         quantity++;
                     }
@@ -400,59 +416,59 @@ export class BlankPageComponent implements OnInit {
         return media;
     }
 
-    getMediana(variable, filtro){
+    getMediana(variable, filtro) {
         var mediana = 0;
         var vector = [];
         var aux = 0;
         switch (filtro) {
             case "municipio":
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = Math.trunc(vector.length/2)
-                if(vector.length === 0){
+                aux = Math.trunc(vector.length / 2)
+                if (vector.length === 0) {
                     mediana = 0;
-                }else if((vector.length % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
+                } else if ((vector.length % 2) === 0)
+                    mediana = (vector[aux - 1].precio + vector[aux].precio) / 2;
                 else
                     mediana = vector[aux].precio;
                 break;
             case "distrito":
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = Math.trunc(vector.length/2)
-                if(vector.length === 0){
+                aux = Math.trunc(vector.length / 2)
+                if (vector.length === 0) {
                     mediana = 0;
-                }else if((vector.length % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
+                } else if ((vector.length % 2) === 0)
+                    mediana = (vector[aux - 1].precio + vector[aux].precio) / 2;
                 else
                     mediana = vector[aux].precio;
                 break;
             case "otb":
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
                 vector.sort((n1, n2) => n1.precio - n2.precio);
-                aux = Math.trunc(vector.length/2)
-                if(vector.length === 0){
+                aux = Math.trunc(vector.length / 2)
+                if (vector.length === 0) {
                     mediana = 0;
-                }else if((vector.length % 2)===0)
-                    mediana = (vector[aux-1].precio+vector[aux].precio)/2;
+                } else if ((vector.length % 2) === 0)
+                    mediana = (vector[aux - 1].precio + vector[aux].precio) / 2;
                 else
                     mediana = vector[aux].precio;
                 break;
@@ -460,29 +476,29 @@ export class BlankPageComponent implements OnInit {
         return mediana;
     }
 
-    getMax(variable, filtro){
+    getMax(variable, filtro) {
         var max = 0;
         switch (filtro) {
             case "municipio":
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
-                        if(aviso.precio>max)
-                        max = aviso.precio;
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio > max)
+                            max = aviso.precio;
                     }
                 }
                 break;
             case "distrito":
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
-                        if(aviso.precio>max)
-                        max = aviso.precio;
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio > max)
+                            max = aviso.precio;
                     }
                 }
                 break;
             case "otb":
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
-                        if(aviso.precio>max)
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio > max)
                             max = aviso.precio;
                     }
                 }
@@ -490,48 +506,48 @@ export class BlankPageComponent implements OnInit {
         return max;
     }
 
-    getMin(variable, filtro){
+    getMin(variable, filtro) {
         var min = 0;
-        
+
         switch (filtro) {
             case "municipio":
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         min = aviso.precio;
                         break;
                     }
                 }
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
-                        if(aviso.precio<min)
-                        min = aviso.precio;
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio < min)
+                            min = aviso.precio;
                     }
                 }
                 break;
             case "distrito":
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         min = aviso.precio;
                         break;
                     }
                 }
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
-                        if(aviso.precio<min)
-                        min = aviso.precio;
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio < min)
+                            min = aviso.precio;
                     }
                 }
                 break;
             case "otb":
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         min = aviso.precio;
                         break;
                     }
                 }
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
-                        if(aviso.precio<min)
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+                        if (aviso.precio < min)
                             min = aviso.precio;
                     }
                 }
@@ -539,82 +555,82 @@ export class BlankPageComponent implements OnInit {
         return min;
     }
 
-    getModa(variable, filtro){
+    getModa(variable, filtro) {
         var moda = 0;
         var count = 0;
-        var counter =0;
+        var counter = 0;
         var vector = [];
         var moda2 = 0;
         switch (filtro) {
             case "municipio":
                 for (let aviso of this.av) {
-                    if (aviso.municipio === variable) {
+                    if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
 
-                for(let element of vector){
+                for (let element of vector) {
                     moda2 = element.precio
-                    for(let dato of vector){
-                        if(dato.precio === moda2){
+                    for (let dato of vector) {
+                        if (dato.precio === moda2) {
                             count++;
-                        }   
+                        }
                     }
-                    if(count>counter){
+                    if (count > counter) {
                         counter = count;
                         moda = moda2;
-                    }                
+                    }
                 }
                 break;
             case "distrito":
                 for (let aviso of this.av) {
-                    if (aviso.distrito === variable) {
+                    if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
 
-                for(let element of vector){
+                for (let element of vector) {
                     moda2 = element.precio
-                    for(let dato of vector){
-                        if(dato.precio === moda2){
+                    for (let dato of vector) {
+                        if (dato.precio === moda2) {
                             count++;
-                        }   
+                        }
                     }
-                    if(count>counter){
+                    if (count > counter) {
                         counter = count;
                         moda = moda2;
-                    }                
+                    }
                 }
                 break;
             case "otb":
                 for (let aviso of this.av) {
-                    if (aviso.otb === variable) {
+                    if (aviso.otb === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
                         vector.push({
-                            precio : aviso.precio
+                            precio: aviso.precio
                         });
                     }
                 }
 
-                for(let element of vector){
+                for (let element of vector) {
                     moda2 = element.precio
-                    for(let dato of vector){
-                        if(dato.precio === moda2){
+                    for (let dato of vector) {
+                        if (dato.precio === moda2) {
                             count++;
-                        }   
+                        }
                     }
-                    if(count>counter){
+                    if (count > counter) {
                         counter = count;
                         moda = moda2;
-                    }                
+                    }
                 }
         }
         return moda;
     }
-    
+
 
     //    Metodo para controlar los botones de radio, Global, Distritos, Otb's
     radioButtonChange(event) {
@@ -635,63 +651,107 @@ export class BlankPageComponent implements OnInit {
         }
     }
 
-    setestadistica(event){
+    setestadistica(event) {
         var id = event.target.id;
-        switch(id){
-            case "media":
+        this.setall(id);
+    }
+
+    setall(id) {
+        switch (id) {
+            case "Media":
                 this.vectorMedia("municipio");
                 this.vectorMedia("distrito");
                 this.vectorMedia("otb");
-            break;
-            case "moda":
+                this.opcion = "Media";
+                break;
+            case "Moda":
                 this.vectorModa("municipio");
                 this.vectorModa("distrito");
                 this.vectorModa("otb");
-            break;
-            case "mediana":
+                this.opcion = "Moda";
+                break;
+            case "Mediana":
                 this.vectorMediana("municipio");
                 this.vectorMediana("distrito");
                 this.vectorMediana("otb");
-            break;
-            case "max":
+                this.opcion = "Mediana";
+                break;
+            case "Valor maximo":
                 this.vectorMax("municipio");
                 this.vectorMax("distrito");
                 this.vectorMax("otb");
-            break;
-            case "min":
+                this.opcion = "Valor maximo";
+                break;
+            case "Valor minimo":
                 this.vectorMin("municipio");
                 this.vectorMin("distrito");
                 this.vectorMin("otb");
-            break;
+                this.opcion = "Valor minimo";
+                break;
         }
         this.setIntensidades(this.otbs, this.preciosMediaOtb);
         this.setIntensidades(this.distritos, this.preciosMediaDistrito);
         this.setIntensidades(this.municipios, this.preciosMediaMunicipio);
     }
-    
+
+    settipo(event) {
+        var id = event.target.id;
+        switch (id) {
+            case "alquiler":
+                this.filtrotipo = "alquiler";
+                break;
+            case "venta":
+                this.filtrotipo = "venta";
+                break;
+            case "anti":
+                this.filtrotipo = "anticretico";
+                break;
+        }
+        this.setall(this.opcion);
+    }
+
+    setseccion(event) {
+        var id = event.target.id;
+        switch (id) {
+            case "casa":
+                this.filtrosec = "casa";
+                break;
+            case "dept":
+                this.filtrosec = "departamento";
+                break;
+            case "lote":
+                this.filtrosec = "lote";
+                break;
+            case "local":
+                this.filtrosec = "local_comercial";
+                break;
+        }
+        this.setall(this.opcion);
+    }
     clicked(nombre) {
-        switch(this.filtro){
+        switch (this.filtro) {
             case "municipio":
-            for(let element of this.preciosMediaMunicipio){
-                if(element.nombre === nombre)
-                this.mediafiltrada = element.media;
-                this.variablefiltrada = nombre;
-            }
-            break;
+                for (let element of this.preciosMediaMunicipio) {
+                    if (element.nombre === nombre)
+                        this.mediafiltrada = element.media;
+                    this.variablefiltrada = nombre;
+                }
+                break;
             case "distrito":
-            for(let element of this.preciosMediaDistrito){
-                if(element.nombre === nombre)
-                this.mediafiltrada = element.media;
-                this.variablefiltrada = nombre;
-            }
-            break;
+                for (let element of this.preciosMediaDistrito) {
+                    if (element.nombre === nombre)
+                        this.mediafiltrada = element.media;
+                    this.variablefiltrada = nombre;
+                }
+                break;
             case "otb":
-            for(let element of this.preciosMediaOtb){
-                if(element.nombre === nombre)
-                this.mediafiltrada = element.media;
-                this.variablefiltrada = nombre;
-            }
-            break;
+                for (let element of this.preciosMediaOtb) {
+                    if (element.nombre === nombre)
+                        this.mediafiltrada = element.media;
+                    this.variablefiltrada = nombre;
+                }
+                break;
         }
     }
+    click(event){}
 }

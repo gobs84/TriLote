@@ -26,14 +26,16 @@
     
     <div class="box"> 
         <p class="sc">{{variablefiltrada}} <br>
-        Media: {{mediafiltrada}}</p>
+            {{filtrotipo}} <br>
+            {{filtrosec}} <br>
+        {{opcion}}: {{mediafiltrada}}</p>
      </div>
 
         <fieldset class="form-group">
             <label>MAPA</label>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Completo
+                    <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Completo    
                 </label>
             </div>
             <div class="radio">
@@ -47,31 +49,72 @@
                 </label>
             </div>
         </fieldset>&nbsp;
-        <fieldset class="form-group2">
+        <fieldset class="form-group">
             <label>Estadisticas</label>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRad" id="media" value="option1" checked="" (change)="setestadistica($event)"> Media
+                    <input type="radio" name="optionsRad" id="Media" value="option1" checked="" (change)="setestadistica($event)"> Media
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRad" id="moda" value="option2" (change)="setestadistica($event)"> Moda
+                    <input type="radio" name="optionsRad" id="Moda" value="option2" (change)="setestadistica($event)"> Moda
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRad" id="mediana" value="option3" (change)="setestadistica($event)"> Mediana
+                    <input type="radio" name="optionsRad" id="Mediana" value="option3" (change)="setestadistica($event)"> Mediana
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRad" id="max" value="option4" (change)="setestadistica($event)"> Valor maximo
+                    <input type="radio" name="optionsRad" id="Valor maximo" value="option4" (change)="setestadistica($event)"> Valor maximo     
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRad" id="min" value="option5" (change)="setestadistica($event)"> Valor minimo
+                    <input type="radio" name="optionsRad" id="Valor minimo" value="option5" (change)="setestadistica($event)"> Valor minimo
+                </label>
+            </div>
+        </fieldset>&nbsp;
+        <fieldset class="form-group">
+            <label>Sección</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="casa" value="option1" checked="" (change)="setseccion($event)"> Casa
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="dept" value="option2" (change)="setseccion($event)"> Departamento    
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="lote" value="option3" (change)="setseccion($event)"> Lote
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="local" value="option4" (change)="setseccion($event)"> Local
+                </label>
+            </div>
+        </fieldset>&nbsp;
+        <fieldset class="form-group">
+            <label>Tipo</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="alquiler" value="option1" checked="" (change)="settipo($event)"> Alquiler
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="venta" value="option2" (change)="settipo($event)"> Venta
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="anti" value="option3" (change)="settipo($event)"> Anticrético       
                 </label>
             </div>
         </fieldset>&nbsp;
