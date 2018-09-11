@@ -10,7 +10,12 @@ import { element } from 'protractor';
   animations: [routerTransition()]
 })
 export class StatisticsPageComponent implements OnInit {
-
+  selectedOption1 = { name: "", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
+  selectedOption2 = { name: "", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
+  municipios = [];
+  avisos = [];
+  filtrotipo = "venta";
+  filtrosec = "casa";
   //    Variables para estadisticas con todos los datos
   items = [];
   precios = [];
@@ -172,9 +177,31 @@ export class StatisticsPageComponent implements OnInit {
   }
 
   statisticsFlag: boolean = false;
+  compareFlag: boolean = false;
   constructor(private _dataService: DataService) { }
 
   ngOnInit() {
+    this._dataService.getAvisos()
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        for (let dato of datos) {
+          this.avisos.push({
+            precio: dato.precio,
+            seccion: dato.seccion,
+            tipo: dato.tipo,
+            municipio: dato.municipio,
+            distrito: dato.distrito,
+            otb: dato.otb,
+            dia: dato.dia,
+            mes: dato.mes,
+            year: dato.year
+          });
+        }
+        console.log('avisos:', this.avisos);
+      },
+        error => {
+          console.log(error);
+        });
     this._dataService.getUsers()
       .subscribe(response => {
         this.items = response['data'];
@@ -204,6 +231,67 @@ export class StatisticsPageComponent implements OnInit {
         error => {
           console.log(error);
         });
+    this._dataService.getMunicipios()
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        datos.sort((n1, n2) => n1.ID - n2.ID)
+        var count = -1;
+        var nombre = "";
+        for (let dato of datos) {
+          if (!(dato.NOM_MUN === nombre)) {
+            count++;
+            nombre = dato.NOM_MUN;
+            this.municipios.push({
+              nombre: dato.NOM_MUN,
+            });
+          }
+        }
+        console.log('municipios:', this.municipios);
+      },
+        error => {
+          console.log(error);
+        });
+  }
+
+  cargarComparar() {
+    this.compareFlag = true;
+    this.selectedOption1.media = this.getMedia(this.selectedOption1.name, "municipio");
+    this.selectedOption2.media = this.getMedia(this.selectedOption2.name, "municipio");
+
+    console.log(this.selectedOption1.name);
+    console.log(this.selectedOption1.media);
+    
+    console.log(this.selectedOption2.name);
+    console.log(this.selectedOption2.media);
+  }
+
+
+  getMedia(variable, filtro) {
+    var media = 0;
+    var quantity = 0;
+    switch (filtro) {
+      case "municipio":
+        for (let aviso of this.avisos) {
+          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+            media += aviso.precio;
+            quantity++;
+          }
+        }
+        if (quantity === 0) media = 0;
+        else media = (media / quantity);
+        break;
+      case "distrito":
+        for (let aviso of this.avisos) {
+          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+            media += aviso.precio;
+            quantity++;
+          }
+        }
+        if (quantity === 0) media = 0;
+        else media = (media / quantity);
+        break;
+    }
+    return media;
   }
   //    Metodo encargado de cargar todos los datos a las graficas y de contener los metodos de los calculos
   cargarDatos() {

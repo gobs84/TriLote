@@ -2,7 +2,54 @@
   statistics-page works!
 </p>
 
-<div><button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button></div>
+<div>
+    <select [(ngModel)]="selectedOption1.name">
+      <option *ngFor="let municipio of this.municipios" [value]= "municipio.nombre">{{municipio.nombre}}</option>
+    </select>
+
+    <select  style="margin-left:20px " [(ngModel)]="selectedOption2.name">
+      <option *ngFor="let municipio of this.municipios" [value]= "municipio.nombre">{{municipio.nombre}}</option>
+    </select>
+</div>
+<br>
+<div><button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
+    <button class="btn btn-primary" style="margin-left:20px; height: 40px;" (click)="cargarComparar()">COMPARAR</button>
+</div>
+
+
+
+<div *ngIf = "compareFlag">
+   <div class="row"></div>
+   <div class="col col-sm-6">
+    <div class="card mb-3">
+       <div class="card-header">Estadisticas ($)</div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Media</th>
+                <th>Moda</th>
+                <th>Mediana</th>
+                <th>Minimo</th>
+                <th>Maximo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor = "let municipio of this.municipios">
+                <th scope="row">{{municipio.name}}</th>
+                <td>{{municipio.media}}</td>
+                <td>{{municipio.moda}}</td>
+                <td>{{municipio.mediana}}</td>
+                <td>{{municipio.minimo}}</td>
+                <td>{{municipio.maximo}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div> 
+    </div>
+</div>
+</div>
 
 <br>
 <div [@routerTransition] *ngIf="statisticsFlag">
