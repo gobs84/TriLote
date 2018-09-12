@@ -1,106 +1,220 @@
-<p class="marg">
-  statistics-page works!
-</p>
+<fieldset style="position: absolute;" class="form-group">
+    <br>
+    <label>Division</label>
+    <div class="radio">
+        <label>
+            <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Municipio
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="optionsRadios" id="distritos" value="option2" (change)="radioButtonChange($event)"> Distritos
+        </label>
+    </div>
+</fieldset>&nbsp;
+<fieldset style="position: absolute;margin-left:100px;" class="form-group">
+    <label>Sección</label>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options2" id="casa" value="option1" checked="" (change)="setseccion($event)"> Casa
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options2" id="dept" value="option2" (change)="setseccion($event)"> Departamento
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options2" id="lote" value="option3" (change)="setseccion($event)"> Lote
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options2" id="local" value="option4" (change)="setseccion($event)"> Local
+        </label>
+    </div>
+</fieldset>&nbsp;
+<fieldset style="position: static; margin-left:250px;" class="form-group">
+    <label>Tipo</label>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options3" id="alquiler" value="option1" checked="" (change)="settipo($event)"> Alquiler
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options3" id="venta" value="option2" (change)="settipo($event)"> Venta
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+            <input type="radio" name="options3" id="anti" value="option3" (change)="settipo($event)"> Anticrético
+        </label>
+    </div>
+</fieldset>&nbsp;
+
+
+
 
 <div>
-    <select [(ngModel)]="selectedOption1.name">
-      <option *ngFor="let municipio of this.municipios" [value]= "municipio.nombre">{{municipio.nombre}}</option>
+    <select *ngIf="!flagDist" [(ngModel)]="selectedOption1.name">
+        <option *ngFor="let municipio of this.municipios" [value]="municipio.nombre">{{municipio.nombre}}</option>
     </select>
 
-    <select  style="margin-left:20px " [(ngModel)]="selectedOption2.name">
-      <option *ngFor="let municipio of this.municipios" [value]= "municipio.nombre">{{municipio.nombre}}</option>
+    <select *ngIf="flagDist" [(ngModel)]="selectedOption1.name">
+        <option *ngFor="let distrito of this.distritos" [value]="distrito.nombre">{{distrito.nombre}}</option>
+    </select>
+
+    <select *ngIf="!flagDist" style="margin-left:20px " [(ngModel)]="selectedOption2.name">
+        <option *ngFor="let municipio of this.municipios" [value]="municipio.nombre">{{municipio.nombre}}</option>
+    </select>
+    <select *ngIf="flagDist" style="margin-left:20px" [(ngModel)]="selectedOption2.name">
+        <option *ngFor="let distrito of this.distritos" [value]="distrito.nombre">{{distrito.nombre}}</option>
     </select>
 </div>
 <br>
-<div><button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
+<div>
+    <button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
     <button class="btn btn-primary" style="margin-left:20px; height: 40px;" (click)="cargarComparar()">COMPARAR</button>
+    <button class="btn btn-primary" style="margin-left:40px; height: 40px;" (click)="cargarReport()">REPORTE</button>
 </div>
+<br>
 
-
-
-<div *ngIf = "compareFlag">
-   <div class="row"></div>
-   <div class="col col-sm-6">
-    <div class="card mb-3">
-       <div class="card-header">Estadisticas ($)</div>
-    <div class="card-body table-responsive">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Media</th>
-                <th>Moda</th>
-                <th>Mediana</th>
-                <th>Minimo</th>
-                <th>Maximo</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor = "let municipio of this.municipios">
-                <th scope="row">{{municipio.name}}</th>
-                <td>{{municipio.media}}</td>
-                <td>{{municipio.moda}}</td>
-                <td>{{municipio.mediana}}</td>
-                <td>{{municipio.minimo}}</td>
-                <td>{{municipio.maximo}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div> 
+<div *ngIf="compareFlag">
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">Estadisticas</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>nombre</th>
+                                <th>Media</th>
+                                <th>Moda</th>
+                                <th>Mediana</th>
+                                <th>Minimo</th>
+                                <th>Maximo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">{{selectedOption1.name}}</th>
+                                <td>{{selectedOption1.media}}</td>
+                                <td>{{selectedOption1.moda}}</td>
+                                <td>{{selectedOption1.mediana}}</td>
+                                <td>{{selectedOption1.minimo}}</td>
+                                <td>{{selectedOption1.maximo}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{selectedOption2.name}}</th>
+                                <td>{{selectedOption2.media}}</td>
+                                <td>{{selectedOption2.moda}}</td>
+                                <td>{{selectedOption2.mediana}}</td>
+                                <td>{{selectedOption2.minimo}}</td>
+                                <td>{{selectedOption2.maximo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+<div *ngIf="reportFlag">
+    <div class="col col-sm-6">
+        <div class="card mb-3">
+            <div class="card-header">Estadisticas</div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{this.filtro}}</th>
+                            <th>Media</th>
+                            <th>Moda</th>
+                            <th>Mediana</th>
+                            <th>Minimo</th>
+                            <th>Maximo</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="!flagDist">
+                        <tr *ngFor="let municipio of this.municipios">
+                            <th>{{municipio.nombre}}</th>
+                            <td>{{municipio.media}}</td>
+                            <td>{{municipio.moda}}</td>
+                            <td>{{municipio.mediana}}</td>
+                            <td>{{municipio.minimo}}</td>
+                            <td>{{municipio.maximo}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="flagDist">
+                        <tr *ngFor="let distrito of this.distritos">
+                            <th>{{distrito.nombre}}</th>
+                            <td>{{distrito.media}}</td>
+                            <td>{{distrito.moda}}</td>
+                            <td>{{distrito.mediana}}</td>
+                            <td>{{distrito.minimo}}</td>
+                            <td>{{distrito.maximo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <br>
 <div [@routerTransition] *ngIf="statisticsFlag">
-    <div><h3>DETALLES Y CARACTERISTICAS</h3></div>
+    <div>
+        <h3>DETALLES Y CARACTERISTICAS</h3>
+    </div>
     <div class="row">
         <div class="col col-sm-6">
             <div class="card mb-3">
-               <div class="card-header">Estadistica por Seccion de Mercado ($)</div>
-		    <div class="card-body table-responsive">
-		        <table class="table table-bordered">
-		            <thead>
-		            <tr>
-		                <th> </th>
-		                <th>Media</th>
-		                <th>Moda</th>
-                        <th>Mediana</th>
-                        <th>Rango</th>
-		            </tr>
-		            </thead>
-		            <tbody>
-		            <tr>
-		                <th scope="row">Lote</th>
-		                <td>{{lotes.media}}</td>
-		                <td>{{lotes.moda}}</td>
-                        <td>{{lotes.mediana}}</td>
-                        <td>{{lotes.rango}}</td>
-		            </tr>
-		            <tr>
-		                <th scope="row">Departamentos</th>
-		                <td>{{departamentos.media}}</td>
-		                <td>{{departamentos.moda}}</td>
-                        <td>{{departamentos.mediana}}</td>
-		                <td>{{departamentos.rango}}</td>
-		            </tr>
-		            <tr>
-		                <th scope="row">Casas</th>
-		                <td>{{casas.media}}</td>
-		                <td>{{casas.moda}}</td>
-                        <td>{{casas.mediana}}</td>
-		                <td>{{casas.rango}}</td>
-		            </tr>
-                    <tr>
-                        <th scope="row">Locales</th>
-                        <td>{{locales.media}}</td>
-                        <td>{{locales.moda}}</td>
-                        <td>{{locales.mediana}}</td>
-                        <td>{{locales.rango}}</td>
-                    </tr>
-		            </tbody>
-		        </table>
-		    </div> 
+                <div class="card-header">Estadistica por Seccion de Mercado ($)</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th>Media</th>
+                                <th>Moda</th>
+                                <th>Mediana</th>
+                                <th>Rango</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Lote</th>
+                                <td>{{lotes.media}}</td>
+                                <td>{{lotes.moda}}</td>
+                                <td>{{lotes.mediana}}</td>
+                                <td>{{lotes.rango}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Departamentos</th>
+                                <td>{{departamentos.media}}</td>
+                                <td>{{departamentos.moda}}</td>
+                                <td>{{departamentos.mediana}}</td>
+                                <td>{{departamentos.rango}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Casas</th>
+                                <td>{{casas.media}}</td>
+                                <td>{{casas.moda}}</td>
+                                <td>{{casas.mediana}}</td>
+                                <td>{{casas.rango}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Locales</th>
+                                <td>{{locales.media}}</td>
+                                <td>{{locales.moda}}</td>
+                                <td>{{locales.mediana}}</td>
+                                <td>{{locales.rango}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="col col-sm-6">
@@ -109,36 +223,36 @@
                 <div class="card-body table-responsive">
                     <table class="table table-bordered">
                         <thead>
-                        <tr>
-                            <th> </th>
-                            <th>Media</th>
-                            <th>Moda</th>
-                            <th>Mediana</th>
-                            <th>Rango</th>
-                        </tr>
+                            <tr>
+                                <th> </th>
+                                <th>Media</th>
+                                <th>Moda</th>
+                                <th>Mediana</th>
+                                <th>Rango</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th scope="row">Alquiler</th>
-                            <td>{{alquilerGlobal.media}}</td>
-                            <td>{{alquilerGlobal.moda}}</td>
-                            <td>{{alquilerGlobal.mediana}}</td>
-                            <td>{{alquilerGlobal.rango}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Venta</th>
-                            <td>{{ventaGlobal.media}}</td>
-                            <td>{{ventaGlobal.moda}}</td>
-                            <td>{{ventaGlobal.mediana}}</td>
-                            <td>{{ventaGlobal.rango}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Anticretico</th>
-                            <td>{{anticreticoGlobal.media}}</td>
-                            <td>{{anticreticoGlobal.moda}}</td>
-                            <td>{{anticreticoGlobal.mediana}}</td>
-                            <td>{{anticreticoGlobal.rango}}</td>
-                        </tr>
+                            <tr>
+                                <th scope="row">Alquiler</th>
+                                <td>{{alquilerGlobal.media}}</td>
+                                <td>{{alquilerGlobal.moda}}</td>
+                                <td>{{alquilerGlobal.mediana}}</td>
+                                <td>{{alquilerGlobal.rango}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Venta</th>
+                                <td>{{ventaGlobal.media}}</td>
+                                <td>{{ventaGlobal.moda}}</td>
+                                <td>{{ventaGlobal.mediana}}</td>
+                                <td>{{ventaGlobal.rango}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Anticretico</th>
+                                <td>{{anticreticoGlobal.media}}</td>
+                                <td>{{anticreticoGlobal.moda}}</td>
+                                <td>{{anticreticoGlobal.mediana}}</td>
+                                <td>{{anticreticoGlobal.rango}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -152,7 +266,8 @@
                     Grafico de Barras
                 </div>
                 <div class="card-body">
-                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                        [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
                 <div class="radio">&nbsp;
@@ -216,7 +331,8 @@
                     Grafico Radar
                 </div>
                 <div class="card-body">
-                    <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels" [chartType]="radarChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels" [chartType]="radarChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
                 <div class="radio">&nbsp;
@@ -282,7 +398,8 @@
                     Grafico de Pie - Cantidad Seccion/Tipo
                 </div>
                 <div class="card-body">
-                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
                 <div class="radio">&nbsp;
@@ -307,7 +424,8 @@
                     Grafico de Area - Cantidad Seccion/Tipo
                 </div>
                 <div class="card-body">
-                    <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType"
+                        (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
                 <div class="radio">&nbsp;
