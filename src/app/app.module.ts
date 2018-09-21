@@ -8,7 +8,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthGuard } from './shared';
 import { AgmCoreModule } from '@agm/core';
 import { DataService } from './services/data.service';
 
@@ -44,7 +43,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     })
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard, DataService, HttpClient],
+    providers: [DataService, HttpClient],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
