@@ -4,7 +4,6 @@ var otbSchema = mongoose.Schema({
    MUNICIPIO : String,
    DISTRITO : String,
    OTB : String,
-   ORIG_FID : Number,
    Lat : Number,
    Lng : Number
 });

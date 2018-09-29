@@ -1,55 +1,40 @@
 <div>
-	<i>HELLO WORLD</i><input type="text" id="address" size="30">&nbsp;<i>Lat: {{lat}}</i>&nbsp;<i>Long: {{lng}}</i>
+	<p class="marg">Mapa genial</p>
 </div>
 
 <div class="row">
-	<agm-map [latitude]="lat" [longitude]="lng" (mapClick)="click($event)" [zoom]="13">
-		<agm-marker *ngFor="let item of items" [latitude]="item.latitud" [longitude]="item.longitud">
-            <agm-info-window [disableAutoPan]="false" #infoWindow>
-                <div>
-                   <h6>{{item.tipo}}</h6>
-                </div>
-                <div>
-                    <h6>{{item.municipio}}</h6>
-                </div>
-                <div *ngIf="otbsFlag">
-                    <h6>{{item.otb}}</h6>
-                </div>
-                <div *ngIf="distritosFlag">
-                    <h6>{{item.distrito}}</h6>
-                </div>
-                <div>
-                    <h6>{{item.seccion}}</h6>
-                </div>
-                <div>
-                    <h6>$ {{item.precio}}</h6>
-                </div>
-            </agm-info-window>      
-        </agm-marker>
+	<agm-map [latitude]="lat" [longitude]="lng" [mapTypeId]= "'satellite'" (mapClick)="click($event)" [zoom]="13">
         <div *ngIf='!otbsFlag && !distritosFlag'>
-        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" [zIndex]="1"></agm-polygon>
+        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#0000FF'"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='otbsFlag' >
-        <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" [zIndex]="1"></agm-polygon>
+        <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#0000FF'"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='distritosFlag'>
-        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#DC143C'"
-               [fillOpacity]="0.2" [paths]="municipio.puntos"
-               [strokeColor]="'#DC143C'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" [zIndex]="1"></agm-polygon>
+        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#0000FF'"
+               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
+               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
         </div>
-	</agm-map>&nbsp;   
+    </agm-map>&nbsp;
+    
+    <div class="box"> 
+        <p class="sc">{{variablefiltrada}} <br>
+            {{filtrotipo}} <br>
+            {{filtrosec}} <br>
+        {{opcion}}: {{mediafiltrada}}</p>
+     </div>
         <fieldset class="form-group">
             <label>MAPA</label>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Completo
+                    <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Completo    
                 </label>
             </div>
             <div class="radio">
@@ -63,289 +48,75 @@
                 </label>
             </div>
         </fieldset>&nbsp;
+        <fieldset class="form-group">
+            <label>Estadisticas</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="Media" value="option1" checked="" (change)="setestadistica($event)"> Media
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="Moda" value="option2" (change)="setestadistica($event)"> Moda
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="Mediana" value="option3" (change)="setestadistica($event)"> Mediana
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="Valor maximo" value="option4" (change)="setestadistica($event)"> Valor maximo     
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="optionsRad" id="Valor minimo" value="option5" (change)="setestadistica($event)"> Valor minimo
+                </label>
+            </div>
+        </fieldset>&nbsp;
+        <fieldset class="form-group">
+            <label>Sección</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="casa" value="option1" checked="" (change)="setseccion($event)"> Casa
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="dept" value="option2" (change)="setseccion($event)"> Departamento    
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="lote" value="option3" (change)="setseccion($event)"> Lote
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options2" id="local" value="option4" (change)="setseccion($event)"> Local
+                </label>
+            </div>
+        </fieldset>&nbsp;
+        <fieldset class="form-group">
+            <label>Tipo</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="alquiler" value="option1" checked="" (change)="settipo($event)"> Alquiler
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="venta" value="option2" (change)="settipo($event)"> Venta
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="options3" id="anti" value="option3" (change)="settipo($event)"> Anticrético       
+                </label>
+            </div>
+        </fieldset>&nbsp;
 
-        <button class="btn btn-primary" style="height: 40px;" (click)="cargarDatos()">CARGAR</button>
+         
 </div>
-
-<br>
-<div [@routerTransition] *ngIf="statisticsFlag">
-    <div><h3>DETALLES Y CARACTERISTICAS</h3></div>
-    <div class="row">
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-               <div class="card-header">Estadistica por Seccion de Mercado ($)</div>
-		    <div class="card-body table-responsive">
-		        <table class="table table-bordered">
-		            <thead>
-		            <tr>
-		                <th> </th>
-		                <th>Media</th>
-		                <th>Moda</th>
-                        <th>Mediana</th>
-                        <th>Rango</th>
-		            </tr>
-		            </thead>
-		            <tbody>
-		            <tr>
-		                <th scope="row">Lote</th>
-		                <td>{{lotes.media}}</td>
-		                <td>{{lotes.moda}}</td>
-                        <td>{{lotes.mediana}}</td>
-                        <td>{{lotes.rango}}</td>
-		            </tr>
-		            <tr>
-		                <th scope="row">Departamentos</th>
-		                <td>{{departamentos.media}}</td>
-		                <td>{{departamentos.moda}}</td>
-                        <td>{{departamentos.mediana}}</td>
-		                <td>{{departamentos.rango}}</td>
-		            </tr>
-		            <tr>
-		                <th scope="row">Casas</th>
-		                <td>{{casas.media}}</td>
-		                <td>{{casas.moda}}</td>
-                        <td>{{casas.mediana}}</td>
-		                <td>{{casas.rango}}</td>
-		            </tr>
-                    <tr>
-                        <th scope="row">Locales</th>
-                        <td>{{locales.media}}</td>
-                        <td>{{locales.moda}}</td>
-                        <td>{{locales.mediana}}</td>
-                        <td>{{locales.rango}}</td>
-                    </tr>
-		            </tbody>
-		        </table>
-		    </div> 
-            </div>
-        </div>
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">Estadistica Por Tipo de Adquisicion (Global)</div>
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th> </th>
-                            <th>Media</th>
-                            <th>Moda</th>
-                            <th>Mediana</th>
-                            <th>Rango</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">Alquiler</th>
-                            <td>{{alquilerGlobal.media}}</td>
-                            <td>{{alquilerGlobal.moda}}</td>
-                            <td>{{alquilerGlobal.mediana}}</td>
-                            <td>{{alquilerGlobal.rango}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Venta</th>
-                            <td>{{ventaGlobal.media}}</td>
-                            <td>{{ventaGlobal.moda}}</td>
-                            <td>{{ventaGlobal.mediana}}</td>
-                            <td>{{ventaGlobal.rango}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Anticretico</th>
-                            <td>{{anticreticoGlobal.media}}</td>
-                            <td>{{anticreticoGlobal.moda}}</td>
-                            <td>{{anticreticoGlobal.mediana}}</td>
-                            <td>{{anticreticoGlobal.rango}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Grafico de Barras
-                </div>
-                <div class="card-body">
-                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-                <div class="radio">&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="localesB" value="option5" checked="" (change)="radioButtonBarControl($event)"> Locales Comerciales
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="casasB" value="option2" checked="" (change)="radioButtonBarControl($event)"> Casas
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="departamentosB" value="option3" checked="" (change)="radioButtonBarControl($event)"> Departamentos
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="lotesB" value="option4" checked="" (change)="radioButtonBarControl($event)"> Lotes
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="localalqui" value="option6" checked="" (change)="radioButtonBarControl($event)"> Local-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="localventa" value="option7" checked="" (change)="radioButtonBarControl($event)"> Local-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="localanti" value="option8" checked="" (change)="radioButtonBarControl($event)"> Local-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="casaalqui" value="option9" checked="" (change)="radioButtonBarControl($event)"> Casa-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="casaventa" value="option10" checked="" (change)="radioButtonBarControl($event)"> Casa-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="casaanti" value="option11" checked="" (change)="radioButtonBarControl($event)"> Casa-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="depaalqui" value="option12" checked="" (change)="radioButtonBarControl($event)"> Depa-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="depaventa" value="option13" checked="" (change)="radioButtonBarControl($event)"> Depa-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="depaanti" value="option14" checked="" (change)="radioButtonBarControl($event)"> Depa-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="lotealqui" value="option15" checked="" (change)="radioButtonBarControl($event)"> Lote-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="loteventa" value="option16" checked="" (change)="radioButtonBarControl($event)"> Lote-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="loteanti" value="option17" checked="" (change)="radioButtonBarControl($event)"> Lote-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsBar" id="todoB" value="option1" checked="" (change)="radioButtonBarControl($event)"> Todo
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Grafico Radar
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels" [chartType]="radarChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-                <div class="radio">&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="localesR" value="option5" checked="" (change)="radioButtonRadarControl($event)"> Locales Comerciales
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="casasR" value="option2" checked="" (change)="radioButtonRadarControl($event)"> Casas
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="departamentosR" value="option3" checked="" (change)="radioButtonRadarControl($event)"> Departamentos
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="lotesR" value="option4" checked="" (change)="radioButtonRadarControl($event)"> Lotes
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="localalqui" value="option6" checked="" (change)="radioButtonRadarControl($event)"> Local-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="localventa" value="option7" checked="" (change)="radioButtonRadarControl($event)"> Local-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="localanti" value="option8" checked="" (change)="radioButtonRadarControl($event)"> Local-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="casaalqui" value="option9" checked="" (change)="radioButtonRadarControl($event)"> Casa-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="casaventa" value="option10" checked="" (change)="radioButtonRadarControl($event)"> Casa-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="casaanti" value="option11" checked="" (change)="radioButtonRadarControl($event)"> Casa-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="depaalqui" value="option12" checked="" (change)="radioButtonRadarControl($event)"> Depa-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="depaventa" value="option13" checked="" (change)="radioButtonRadarControl($event)"> Depa-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="depaanti" value="option14" checked="" (change)="radioButtonRadarControl($event)"> Depa-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="lotealqui" value="option15" checked="" (change)="radioButtonRadarControl($event)"> Lote-Alquiler
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="loteventa" value="option16" checked="" (change)="radioButtonRadarControl($event)"> Lote-Venta
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="loteanti" value="option17" checked="" (change)="radioButtonRadarControl($event)"> Lote-Anticretico
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsRadar" id="todoB" value="option1" checked="" (change)="radioButtonRadarControl($event)"> Todo
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Grafico de Pie - Cantidad Seccion/Tipo
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-                <div class="radio">&nbsp;
-                    <label>
-                        <input type="radio" name="optionsPie" id="alquilerG" value="option4" checked="" (change)="radioButtonPieControl($event)"> Alquileres
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsPie" id="ventaG" value="option3" checked="" (change)="radioButtonPieControl($event)"> Ventas
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsPie" id="anticreticoG" value="option2" checked="" (change)="radioButtonPieControl($event)"> Anticreticos
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsPie" id="todoG" value="option1" checked="" (change)="radioButtonPieControl($event)"> Todo
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Grafico de Area - Cantidad Seccion/Tipo
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-                <div class="radio">&nbsp;
-                    <label>
-                        <input type="radio" name="optionsArea" id="alquiler" value="option4" checked="" (change)="radioButtonAreaControl($event)"> Alquileres
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsArea" id="venta" value="option3" checked="" (change)="radioButtonAreaControl($event)"> Ventas
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsArea" id="anticretico" value="option2" checked="" (change)="radioButtonAreaControl($event)"> Anticreticos
-                    </label>&nbsp;
-                    <label>
-                        <input type="radio" name="optionsArea" id="todo" value="option1" checked="" (change)="radioButtonAreaControl($event)"> Todo
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Borded Table-->
-		<!--div class="card mb-3">
-		    
-		</div-->
