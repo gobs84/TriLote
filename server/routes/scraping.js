@@ -1,7 +1,7 @@
 var fetch = require("node-fetch");
 var fs = require('fs');
-var Parser = require('simple-text-parser');
-var parser = new Parser();
+//var Parser = require('simple-text-parser');
+//var parser = new Parser();
 var turf = require('@turf/turf')
 const express = require('express');
 const router = express.Router();
@@ -20,21 +20,15 @@ var information = [];
 //=======   PARSER: requiere de ciertas reglas con expresiones regulares para obtener la informacion especifica 
 //=======           dentro todos los datos que nos devuelve la pagina
 //Reglas para extraer los datos de latitud y longitud
-parser.addRule(/\{"latitude":([\S]+),"l/ig, function (tag, data_txt) {
+/*parser.addRule(/\{"latitude":([\S]+),"l/ig, function (tag, data_txt) {
     return { latitud: data_txt };
 });
 parser.addRule(/\ongitude":([\S]+),"m/ig, function (tag, data_txt) {
     return { longitud: data_txt };
 });
-//Reglas para obtener los links de los pins, profundizar
-/*parser.addRule(/\href="([\S]+)">/ig, function(tag, data_txt) {
-	var link = "https://clasificados.lostiempos.com" + data_txt;
-	return {link: link};
-});*/
 parser.addRule(/\$us ([\d]+)/ig, function (tag, data_txt) {
     return { precio: data_txt };
 });
-//Reglas para obtener si es casa,departamento, lote
 parser.addRule(/\Ca([\S]+)a /ig, function (tag, data_txt) {
     var seccion = "casa";
     return { seccion: seccion };
@@ -51,7 +45,6 @@ parser.addRule(/\Local Come([\S]+)ial/ig, function (tag, data_txt) {
     var seccion = "local_comercial";
     return { seccion: seccion };
 });
-//reglas para obtener si es venta, alquiler o anticretico
 parser.addRule(/\- Alqui([\S]+)er/ig, function (tag, data_txt) {
     var tipo = "alquiler";
     return { tipo: tipo };
@@ -64,7 +57,7 @@ parser.addRule(/\- Anti([\S]+)co/ig, function (tag, data_txt) {
     var tipo = "anticretico";
     return { tipo: tipo };
 });
-
+*/
 var municipios = [];
 var distritos = [];
 var otbs = [];
@@ -161,7 +154,8 @@ function scrap() {
                 if (err) throw err; //  si el error existe, se lanza por encima de todo
                 var re = /\,"markers"(\W+\w+)*/g;   //nos creamos una expresion regular para poder obtener la informacion a partir de los markers
                 var firstPartition = body.match(re);    //aplicamos la expresion regular ala variable body y almacenamos la respuesta en la variable
-                var miArray = parser.toTree(firstPartition[0]); //ahora aplicamos el parseo con la reglas previamente cargadas(las de arriba/addRule..)
+                var objeto = makejson(body);
+                //var miArray = parser.toTree(firstPartition[0]); //ahora aplicamos el parseo con la reglas previamente cargadas(las de arriba/addRule..)
                 console.log("Se guardo el archivo correctamente");  //mensaje de aviso
                 var punto = require('../../src/app/Models/punto.js');
                 punto.find(function (err, post1) {
@@ -179,8 +173,29 @@ function scrap() {
                                         llenar(post2, 2);
                                         llenar(post3, 3)
                                         var lat, long, pre, sec, tip, mun, dist, otb;   // variables para cargar datos de interes, latitud, longitud, precio, seccion, tipo
-                                        for (let item of miArray) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
-                                            if (!item.text) {
+                                        for (let item of objeto.markers) {  //iteramos cobre la respuesta, y todos los json que no posean el campo texto, son los que nos interesan
+                                            var variables = getdata(item.text);
+                                            if(variables[0] != 0){
+                                                lat = item.latitude;
+                                                long = item.longitude;
+                                                pre = variables[1];
+                                                sec = variables[2];
+                                                tip = variables[3];
+                                                mun = verificar(Number(lat), Number(long), 1);
+                                                dist = verificar(Number(lat), Number(long), 2);
+                                                otb = verificar(Number(lat), Number(long), 3);
+                                                information.push({          //en este punto nuestras 5 variables de interes ya estaran cargadas, entonces 
+                                                    latitud: Number(lat),   //cargamos nuetro arreglo 'information' con un nuevo objeto con las caracteristicas de las 5 variables
+                                                    longitud: Number(long),
+                                                    precio: Number(pre),
+                                                    seccion: sec,
+                                                    tipo: tip,
+                                                    municipio: mun,
+                                                    distrito: dist,
+                                                    otb: otb
+                                                });
+                                            }
+                                            /*if (!item.text) {
                                                 if (item.latitud) {
                                                     lat = item.latitud;
                                                 }
@@ -209,7 +224,7 @@ function scrap() {
                                                         otb: otb
                                                     });
                                                 }
-                                            }
+                                            }*/
                                         }
                                     }
                                 })
@@ -219,6 +234,56 @@ function scrap() {
                 })
             })
         );
+}
+
+function makejson(body){
+    var start = body.indexOf('"markers":[');
+    var end = body.indexOf("],",start);
+    var jsonp = "{"+body.substring(start, end+1)+"}";
+    var obj = JSON.parse(jsonp);
+    for (let item of obj.markers){
+        var a = getdata(item.text);
+        console.log(a);
+    }
+    return obj;
+}
+
+function getdata(text){
+    var val =0;
+    var startp = text.indexOf('"price">$us ');
+    var endp = text.indexOf("<",startp);
+    if(startp>=0){
+        var precio = parseInt(text.substring(startp+'"price">$us '.length,endp));
+        if(precio != "NaN"){
+            var starts = text.indexOf('"seccion">');
+            var ends = text.indexOf("<",starts);
+            if(starts>=0){
+                var seccion = 0;
+                var tipo = 0;
+                var con = text.substring(starts+'"seccion">'.length,ends);
+                if(con.indexOf("Casa")>=0){
+                    seccion = "casa";
+                }else if(con.indexOf("Departamento")>=0){
+                    seccion = "departamento";
+                }else if(con.indexOf("Lote")>=0){
+                    seccion = "lote";
+                }else if(con.indexOf("Local")>=0){
+                    seccion = "local_comercial";
+                }
+                if(con.indexOf("Venta")>=0){
+                    tipo = "venta";
+                }else if(con.indexOf("Alquiler")>=0){
+                    tipo = "alquiler";
+                }else if(con.indexOf("Anticr")>=0){
+                    tipo = "anticretico"
+                }
+                if(precio != 0 && seccion != 0 && tipo !=0){
+                    val =1;
+                }
+            }
+        }
+    }
+    return [val,precio,seccion,tipo];
 }
 
 function saveData(){
