@@ -32,5 +32,9 @@ export class DataService {
     return this._http.get("http://localhost:3000/api/avisos");
   }
 
+  getAvisosM(year, month){
+    return this._http.get("http://localhost:3000/api/avisos/mes/"+year+"/"+month);
+  }
+
 
 }

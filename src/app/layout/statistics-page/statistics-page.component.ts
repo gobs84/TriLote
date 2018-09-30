@@ -10,8 +10,9 @@ import { element } from 'protractor';
   animations: [routerTransition()]
 })
 export class StatisticsPageComponent implements OnInit {
-  selectedOption1 = { name: "", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
-  selectedOption2 = { name: "", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
+  dt = new Date;
+  selectedOption1 = { name: "Quillacollo", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
+  selectedOption2 = { name: "Quillacollo", media: 0, moda: 0, mediana: 0, minimo: 0, maximo: 0 };
   municipios = [];
   avisos = [];
   distritos = [];
@@ -19,66 +20,21 @@ export class StatisticsPageComponent implements OnInit {
   filtrotipo = "alquiler";
   filtrosec = "casa";
   flagDist = false;
-
-  //    Variables para estadisticas con todos los datos
-  items = [];
-  precios = [];
-  global: Estadistica;
-  preciosAlquilerGlobal = [];
-  preciosVentaGlobal = [];
-  preciosAnticreticoGlobal = [];
-  alquilerGlobal: Estadistica;
-  ventaGlobal: Estadistica;
-  anticreticoGlobal: Estadistica;
-  //    Variables para estadisticas con los datos de los lotes
-  itemsLote = [];
-  preciosLote = [];
-  lotes: Estadistica;
-  preciosAlquilerLotes = [];
-  preciosVentaLotes = [];
-  preciosAnticreticoLotes = [];
-  alquilerLote: Estadistica;
-  ventaLote: Estadistica;
-  anticreticoLote: Estadistica;
-  //    Variables para estadisticas con los datos de los departamentos
-  itemsDepartamento = [];
-  preciosDepartamento = [];
-  departamentos: Estadistica;
-  preciosAlquilerDepartamentos = [];
-  preciosVentaDepartamentos = [];
-  preciosAnticreticoDepartamentos = [];
-  alquilerDepartamento: Estadistica;
-  ventaDepartamento: Estadistica;
-  anticreticoDepartamento: Estadistica;
-  //    Variables para estadisticas con los datos de las casas
-  itemsCasa = [];
-  preciosCasa = [];
-  casas: Estadistica;
-  preciosAlquilerCasas = [];
-  preciosVentaCasas = [];
-  preciosAnticreticoCasas = [];
-  alquilerCasa: Estadistica;
-  ventaCasa: Estadistica;
-  anticreticoCasa: Estadistica;
-  //    Variables para estadisticas con los datos de los locales comerciales
-  itemsLocal = [];
-  preciosLocal = [];
-  locales: Estadistica;
-  preciosAlquilerLocales = [];
-  preciosVentaLocales = [];
-  preciosAnticreticoLocales = [];
-  alquilerLocal: Estadistica;
-  ventaLocal: Estadistica;
-  anticreticoLocal: Estadistica;
+  year = this.dt.getFullYear();
+  month = this.dt.getMonth() + 1;
+  months = [{ nombre: "Enero", num: 1 }, { nombre: "Febrero", num: 2 }, { nombre: "Marzo", num: 3 }, { nombre: "Abril", num: 1 },
+  { nombre: "Mayo", num: 5 }, { nombre: "Junio", num: 6 }, { nombre: "Julio", num: 7 }, { nombre: "Agosto", num: 8 },
+  { nombre: "Septiembre", num: 9 }, { nombre: "Octubre", num: 10 }, { nombre: "Noviembre", num: 11 }, { nombre: "Diciembre", num: 12 }]
+  years = [];
   //    Variables iniciales para el grafico de barras
   public barChartOptions: any = { scaleShowVerticalLines: false, responsive: true };
-  public barChartLabels: string[] = ['Media', 'Moda', 'Mediana', 'Rango'];
+  public barChartLabels: string[] = ['Media', 'Moda', 'Mediana', 'Maximo', 'Minimo'];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
-  public barChartData: any[] = [{ data: [65, 59, 80, 81], label: 'Precios($)' }];
+  public barChartData: any[] = [{ data: [65, 59, 80, 81, 35], label: 'Precios($)' }];
   //    Variables iniciales para el grafico de radar
-  public radarChartLabels: string[] = ['Media', 'Moda', 'Mediana', 'Rango'];
-  public radarChartData: any = [{ data: [65, 59, 90, 81], label: 'Precios($)' }];
+  public radarChartLabels: string[] = ['Media', 'Moda', 'Mediana', 'Maximo', 'Minimo'];
+  public radarChartData: any = [{ data: [65, 59, 90, 81, 35], label: 'Precios($)' }];
   public radarChartType: string = 'radar';
   //    Variables iniciales para el graficos de pie
   public pieChartLabels: string[] = ['Lotes', 'Departamentos', 'Casas', 'Locales'];
@@ -105,230 +61,21 @@ export class StatisticsPageComponent implements OnInit {
     resultado = datos.sort((n1, n2) => n1 - n2);
     return resultado;
   }
-  //    Metodo para calcular la moda de un arreglo de datos
-  calcularModa(datos: any) {
-    //iniciamos las variables necesarias en todo el codigo
-    var moda, moda2;
-    var contador = 0, contador2 = 0;
-    //Recorremos los datos
-    for (var x = 0; x < datos.length; x++) {
-      //Miramos que el numero cogido no sea el de la moda
-      if (datos[x] != moda) {
-        var contadorReinicia = 0;
-        //Recorremos la array para encontrar concordancias on el numero sacado de la array de X
-        for (var i = 0; i < datos.length; i++) {
-          //cunado el numero sea igual al de la array de x le añadimos 1 al contador
-          if (datos[i] == datos[x]) contadorReinicia++;
-        }
-        //si el contador que se reinicia nos da mas alto que el contador general añadimos el numero a la variable moda y cambiamos el contador general por el que reinicia
-        if (contadorReinicia > contador) {
-          contador = contadorReinicia;
-          moda = datos[x];
-        }
-      }
-    }
-    //Miramos que no hayan 2 con la misma cantidad
-    for (var x = 0; x < datos.length; x++) {
-      //Miramos que el numero cogido no sea el de la moda
-      if (datos[x] != moda && datos[x] != moda2) {
-        var contadorReinicia = 0;
-        //Recorremos la array para encontrar concordancias on el numero sacado de la array de X
-        for (var i = 0; i < datos.length; i++) {
-          //cunado el numero sea igual al de la array de x le añadimos 1 al contador
-          if (datos[i] == datos[x]) contadorReinicia++;
-        }
-        //si el contador que se reinicia nos da mas alto que el contador general añadimos el numero a la variable moda y cambiamos el contador general por el que reinicia
-        if (contadorReinicia > contador2) {
-          contador2 = contadorReinicia;
-          moda2 = datos[x];
-        }
-        //Si tenemos 2 de la misma cantidad retornamos -1
-        if (contador2 == contador) return -1;
-      }
-    }
-    //Retornamos la moda!!!
-    return moda;
-  }
-  //    Metodo para calcular la Media de un arreglo de datos
-  calcularMedia(datos: any) {
-    var resultado: number = 0;
-    for (let item of datos) {
-      resultado += item;
-      console.log(item);
-    }
-    resultado = resultado / datos.length;
-    return resultado;
-  }
-  // Metodo para calcular la Mediana de un arreglo de datos
-  calcularMediana(datos: any) {
-    var resultado, aux: number = 0;
-    aux = Math.trunc(datos.length / 2);
-    console.log(aux);
-    if (datos.length % 2 == 0) {
-      console.log("par");
-      resultado = (datos[aux - 1] + datos[aux]) / 2;
-    } else {
-      console.log("impar");
-      resultado = datos[aux];
-    }
-    return resultado;
-  }
-  //    Metodo para calcular el rango de un arreglo de datos
-  calcularRango(datos: any) {
-    var resultado: number = 0;
-    resultado = datos[datos.length - 1] - datos[0];
-    return resultado;
-  }
 
   statisticsFlag: boolean = false;
   compareFlag: boolean = false;
   reportFlag: boolean = false;
   constructor(private _dataService: DataService) { }
 
-  ngOnInit() {
-    this._dataService.getAvisos()
-      .subscribe(response => {
-        var datos = <Array<any>>response;
-        for (let dato of datos) {
-          this.avisos.push({
-            precio: dato.precio,
-            seccion: dato.seccion,
-            tipo: dato.tipo,
-            municipio: dato.municipio,
-            distrito: dato.distrito,
-            otb: dato.otb,
-            dia: dato.dia,
-            mes: dato.mes,
-            year: dato.year
-          });
-        }
-        console.log('avisos:', this.avisos);
-      },
-        error => {
-          console.log(error);
-        });
-    this._dataService.getUsers()
-      .subscribe(response => {
-        this.items = response['data'];
-        console.log('Servicio:', this.items);
-        for (let item of this.items) {
-          this.precios.push(item.precio);
-          if (item.seccion === "casa") {
-            this.itemsCasa.push(item);
-            this.preciosCasa.push(item.precio);
-          } else if (item.seccion === "departamento") {
-            this.itemsDepartamento.push(item);
-            this.preciosDepartamento.push(item.precio);
-          } else if (item.seccion === "lote") {
-            this.itemsLote.push(item);
-            this.preciosLote.push(item.precio);
-          } else {
-            this.itemsLocal.push(item);
-            this.preciosLocal.push(item.precio);
-          }
-        }
-        this.preciosCasa = this.ordenarLista(this.preciosCasa);
-        this.preciosDepartamento = this.ordenarLista(this.preciosDepartamento);
-        this.preciosLocal = this.ordenarLista(this.preciosLocal);
-        this.preciosLote = this.ordenarLista(this.preciosLote);
-        this.precios = this.ordenarLista(this.precios);
-      },
-        error => {
-          console.log(error);
-        });
-    this._dataService.getMunicipios()
-      .subscribe(response => {
-        var datos = <Array<any>>response;
-        datos.sort((n1, n2) => n1.ID - n2.ID);
-        var nombre = "";
-        for (let dato of datos) {
-          if (!(dato.NOM_MUN === nombre)) {
-            nombre = dato.NOM_MUN;
-            this.municipios.push({
-              nombre: dato.NOM_MUN,
-              media: 0,
-              mediana: 0,
-              moda: 0,
-              minimo: 0,
-              maximo: 0
-            });
-          }
-        }
-        console.log('municipios:', this.municipios);
-      },
-        error => {
-          console.log(error);
-        });
 
-    this._dataService.getDistritos()
-      .subscribe(response => {
-        var datos = <Array<any>>response;
-        datos.sort((n1, n2) => n1.ID - n2.ID);
-        var nombre = "";
-        for (let dato of datos) {
-          if (!(dato.Nomb_dist === nombre)) {
-            nombre = dato.Nomb_dist;
-            this.distritos.push({
-              nombre: dato.Nomb_dist,
-              media: 0,
-              mediana: 0,
-              moda: 0,
-              minimo: 0,
-              maximo: 0
-            });
-          }
-        }
-        console.log('distritos:', this.distritos);
-      },
-        error => {
-          console.log(error);
-        });
-  }
 
-  cargarComparar() {
-    this.compareFlag = true;
-    this.selectedOption1.media = this.getMedia(this.selectedOption1.name);
-    this.selectedOption1.mediana = this.getMediana(this.selectedOption1.name);
-    this.selectedOption1.moda = this.getModa(this.selectedOption1.name);   
-    this.selectedOption1.maximo = this.getMax(this.selectedOption1.name);
-    this.selectedOption1.minimo = this.getMin(this.selectedOption1.name);
-    
-    this.selectedOption2.media = this.getMedia(this.selectedOption2.name);
-    this.selectedOption2.mediana = this.getMediana(this.selectedOption2.name);
-    this.selectedOption2.moda = this.getModa(this.selectedOption2.name);
-    this.selectedOption2.maximo = this.getMax(this.selectedOption2.name);
-    this.selectedOption2.minimo = this.getMin(this.selectedOption2.name);    
-  }
-
-  cargarReport(){
-    this.reportFlag = true;
-    if(this.flagDist){
-      for (let distrito of this.distritos) {
-        distrito.media = this.getMedia(distrito.nombre);
-        distrito.mediana = this.getMediana(distrito.nombre);
-        distrito.moda = this.getModa(distrito.nombre);
-        distrito.maximo = this.getMax(distrito.nombre);
-        distrito.minimo = this.getMin(distrito.nombre);
-      }
-    }else{
-      for (let municipio of this.municipios) {
-        municipio.media = this.getMedia(municipio.nombre);
-        municipio.mediana = this.getMediana(municipio.nombre);
-        municipio.moda = this.getModa(municipio.nombre);
-        municipio.maximo = this.getMax(municipio.nombre);
-        municipio.minimo = this.getMin(municipio.nombre);
-      }
-    }
-
-  }
-
-  getMedia(variable) {
+  getMedia(variable, tipo, seccion) {
     var media = 0;
     var quantity = 0;
     switch (this.filtro) {
       case "municipio":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             media += aviso.precio;
             quantity++;
           }
@@ -338,7 +85,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             media += aviso.precio;
             quantity++;
           }
@@ -350,14 +97,14 @@ export class StatisticsPageComponent implements OnInit {
     return media;
   }
 
-  getMediana(variable) {
+  getMediana(variable, tipo, seccion) {
     var mediana = 0;
     var vector = [];
     var aux = 0;
     switch (this.filtro) {
       case "municipio":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -374,7 +121,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -393,12 +140,12 @@ export class StatisticsPageComponent implements OnInit {
     return mediana;
   }
 
-  getMax(variable) {
+  getMax(variable, tipo, seccion) {
     var max = 0;
     switch (this.filtro) {
       case "municipio":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio > max)
               max = aviso.precio;
           }
@@ -406,7 +153,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio > max)
               max = aviso.precio;
           }
@@ -416,18 +163,18 @@ export class StatisticsPageComponent implements OnInit {
     return max;
   }
 
-  getMin(variable) {
+  getMin(variable, tipo, seccion) {
     var min = 0;
     switch (this.filtro) {
       case "municipio":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             min = aviso.precio;
             break;
           }
         }
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio < min)
               min = aviso.precio;
           }
@@ -435,13 +182,13 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             min = aviso.precio;
             break;
           }
         }
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio < min)
               min = aviso.precio;
           }
@@ -451,7 +198,7 @@ export class StatisticsPageComponent implements OnInit {
     return min;
   }
 
-  getModa(variable) {
+  getModa(variable, tipo, seccion) {
     var moda = 0;
     var count = 0;
     var counter = 0;
@@ -460,7 +207,7 @@ export class StatisticsPageComponent implements OnInit {
     switch (this.filtro) {
       case "municipio":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -482,7 +229,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.distrito === variable && aviso.tipo === this.filtrotipo && aviso.seccion === this.filtrosec) {
+          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -560,353 +307,246 @@ export class StatisticsPageComponent implements OnInit {
     }
   }
 
+  getCount(variable, tipo, seccion) {
+    var count = 0;
+    for (let aviso of this.avisos) {
+      if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  ngOnInit() {
+    for (let index = 0; index < 20; index++) {
+      this.years.push(2018+index);
+    }
+    console.log('years: '+this.years)
+
+    this._dataService.getAvisosM(this.year,this.month)
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        for (let dato of datos) {
+          this.avisos.push({
+            precio: dato.precio,
+            seccion: dato.seccion,
+            tipo: dato.tipo,
+            municipio: dato.municipio,
+            distrito: dato.distrito,
+            otb: dato.otb,
+            dia: dato.dia,
+            mes: dato.mes,
+            year: dato.year
+          });
+        }
+        console.log('avisos:', this.avisos);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this._dataService.getMunicipios()
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        datos.sort((n1, n2) => n1.ID - n2.ID);
+        var nombre = "";
+        for (let dato of datos) {
+          if (!(dato.NOM_MUN === nombre)) {
+            nombre = dato.NOM_MUN;
+            this.municipios.push({
+              nombre: dato.NOM_MUN,
+              media: 0,
+              mediana: 0,
+              moda: 0,
+              minimo: 0,
+              maximo: 0
+            });
+          }
+        }
+        console.log('municipios:', this.municipios);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this._dataService.getDistritos()
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        datos.sort((n1, n2) => n1.ID - n2.ID);
+        var nombre = "";
+        for (let dato of datos) {
+          if (!(dato.Nomb_dist === nombre)) {
+            nombre = dato.Nomb_dist;
+            this.distritos.push({
+              nombre: dato.Nomb_dist,
+              media: 0,
+              mediana: 0,
+              moda: 0,
+              minimo: 0,
+              maximo: 0
+            });
+          }
+        }
+        console.log('distritos:', this.distritos);
+      },
+        error => {
+          console.log(error);
+        });
+  }
+
+  cargarComparar() {
+    this.compareFlag = true;
+    this.selectedOption1.media = this.getMedia(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.mediana = this.getMediana(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.moda = this.getModa(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.maximo = this.getMax(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.minimo = this.getMin(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+
+    this.selectedOption2.media = this.getMedia(this.selectedOption2.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption2.mediana = this.getMediana(this.selectedOption2.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption2.moda = this.getModa(this.selectedOption2.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption2.maximo = this.getMax(this.selectedOption2.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption2.minimo = this.getMin(this.selectedOption2.name, this.filtrotipo, this.filtrosec);
+  }
+
+  cargarReport() {
+    this.reportFlag = true;
+    if (this.flagDist) {
+      for (let distrito of this.distritos) {
+        distrito.media = this.getMedia(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.mediana = this.getMediana(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.moda = this.getModa(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.maximo = this.getMax(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.minimo = this.getMin(distrito.nombre, this.filtrotipo, this.filtrosec);
+      }
+    } else {
+      for (let municipio of this.municipios) {
+        municipio.media = this.getMedia(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.mediana = this.getMediana(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.moda = this.getModa(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.maximo = this.getMax(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.minimo = this.getMin(municipio.nombre, this.filtrotipo, this.filtrosec);
+      }
+    }
+  }
+
+  getaviYears(){
+    this.avisos=[];
+    this._dataService.getAvisos()
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        for (let dato of datos) {
+          this.avisos.push({
+            precio: dato.precio,
+            seccion: dato.seccion,
+            tipo: dato.tipo,
+            municipio: dato.municipio,
+            distrito: dato.distrito,
+            otb: dato.otb,
+            dia: dato.dia,
+            mes: dato.mes,
+            year: dato.year
+          });
+        }
+        console.log('avisos:', this.avisos);
+        this.cargarReportY();
+      },
+        error => {
+          console.log(error);
+        });
+  }
+
+  cargarReportY() {
+    this.reportFlag = true;
+    if (this.flagDist) {
+      for (let distrito of this.distritos) {
+        distrito.media = this.getMedia(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.mediana = this.getMediana(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.moda = this.getModa(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.maximo = this.getMax(distrito.nombre, this.filtrotipo, this.filtrosec);
+        distrito.minimo = this.getMin(distrito.nombre, this.filtrotipo, this.filtrosec);
+      }
+    } else {
+      for (let municipio of this.municipios) {
+        municipio.media = this.getMedia(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.mediana = this.getMediana(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.moda = this.getModa(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.maximo = this.getMax(municipio.nombre, this.filtrotipo, this.filtrosec);
+        municipio.minimo = this.getMin(municipio.nombre, this.filtrotipo, this.filtrosec);
+      }
+    }
+  }
+
 
   //    Metodo encargado de cargar todos los datos a las graficas y de contener los metodos de los calculos
   cargarDatos() {
-    this.calcularEstadisticas();
+    this.selectedOption1.media = this.getMedia(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.mediana = this.getMediana(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.moda = this.getModa(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.maximo = this.getMax(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
+    this.selectedOption1.minimo = this.getMin(this.selectedOption1.name, this.filtrotipo, this.filtrosec);
     this.statisticsFlag = !(this.statisticsFlag);
-    this.cargarGraficaPie(this.itemsLote, this.itemsDepartamento, this.itemsCasa, this.itemsLocal);
-    this.cargarGraficaArea(this.itemsLote, this.itemsDepartamento, this.itemsCasa, this.itemsLocal);
-    this.cargarGraficaRadar(this.global);
-    this.cargarGraficaBarras(this.global);
-  }
-  //    Calculamos los datos estadisticos y los almacenamos en objetos tipo estadistico
-  calcularEstadisticas() {
-    this.global = {
-      media: this.calcularMedia(this.precios),
-      moda: this.calcularModa(this.precios),
-      mediana: this.calcularMediana(this.precios),
-      rango: this.calcularRango(this.precios)
-    };
-    this.casas = {
-      media: this.calcularMedia(this.preciosCasa),
-      moda: this.calcularModa(this.preciosCasa),
-      mediana: this.calcularMediana(this.preciosCasa),
-      rango: this.calcularRango(this.preciosCasa)
-    };
-    this.departamentos = {
-      media: this.calcularMedia(this.preciosDepartamento),
-      moda: this.calcularModa(this.preciosDepartamento),
-      mediana: this.calcularMediana(this.preciosDepartamento),
-      rango: this.calcularRango(this.preciosDepartamento)
-    };
-    this.locales = {
-      media: this.calcularMedia(this.preciosLocal),
-      moda: this.calcularModa(this.preciosLocal),
-      mediana: this.calcularMediana(this.preciosLocal),
-      rango: this.calcularRango(this.preciosLocal)
-    };
-    this.lotes = {
-      media: this.calcularMedia(this.preciosLote),
-      moda: this.calcularModa(this.preciosLote),
-      mediana: this.calcularMediana(this.preciosLote),
-      rango: this.calcularRango(this.preciosLote)
-    };
-    this.calculoTipoTransaccionGlobal();
-    this.calculoTipoTransaccionCasas();
-    this.calculoTipoTransaccionDepartamentos();
-    this.calculoTipoTransaccionLotes();
-    this.calculoTipoTransaccionLocales();
-  }
-  //    Obtencion de los precios globales por tipo: alquiler,venta,anticretico. Calculo y carga de variables para uso general
-  calculoTipoTransaccionGlobal() {
-    for (let item of this.items) {
-      if (item.tipo === "alquiler") {
-        this.preciosAlquilerGlobal.push(item.precio);
-      } else if (item.tipo === "venta") {
-        this.preciosVentaGlobal.push(item.precio);
-      } else {
-        this.preciosAnticreticoGlobal.push(item.precio);
-      }
-    }
-    this.preciosAlquilerGlobal = this.ordenarLista(this.preciosAlquilerGlobal);
-    this.preciosVentaGlobal = this.ordenarLista(this.preciosVentaGlobal);
-    this.preciosAnticreticoGlobal = this.ordenarLista(this.preciosAnticreticoGlobal);
-
-    this.alquilerGlobal = {
-      media: this.calcularMedia(this.preciosAlquilerGlobal),
-      moda: this.calcularModa(this.preciosAlquilerGlobal),
-      mediana: this.calcularMediana(this.preciosAlquilerGlobal),
-      rango: this.calcularRango(this.preciosAlquilerGlobal)
-    };
-    this.ventaGlobal = {
-      media: this.calcularMedia(this.preciosVentaGlobal),
-      moda: this.calcularModa(this.preciosVentaGlobal),
-      mediana: this.calcularMediana(this.preciosVentaGlobal),
-      rango: this.calcularRango(this.preciosVentaGlobal)
-    };
-    this.anticreticoGlobal = {
-      media: this.calcularMedia(this.preciosAnticreticoGlobal),
-      moda: this.calcularModa(this.preciosAnticreticoGlobal),
-      mediana: this.calcularMediana(this.preciosAnticreticoGlobal),
-      rango: this.calcularRango(this.preciosAnticreticoGlobal)
-    };
-  }
-  //    Obtencion de los precios de casas por tipo: alquiler,venta,anticretico. Calculo y carga de variables para uso general
-  calculoTipoTransaccionCasas() {
-    for (let item of this.itemsCasa) {
-      if (item.tipo === "alquiler") {
-        this.preciosAlquilerCasas.push(item.precio);
-      } else if (item.tipo === "venta") {
-        this.preciosVentaCasas.push(item.precio);
-      } else {
-        this.preciosAnticreticoCasas.push(item.precio);
-      }
-    }
-    this.preciosAlquilerCasas = this.ordenarLista(this.preciosAlquilerCasas);
-    this.preciosVentaCasas = this.ordenarLista(this.preciosVentaCasas);
-    this.preciosAnticreticoCasas = this.ordenarLista(this.preciosAnticreticoCasas);
-
-    this.alquilerCasa = {
-      media: this.calcularMedia(this.preciosAlquilerCasas),
-      moda: this.calcularModa(this.preciosAlquilerCasas),
-      mediana: this.calcularMediana(this.preciosAlquilerCasas),
-      rango: this.calcularRango(this.preciosAlquilerCasas)
-    };
-    this.ventaCasa = {
-      media: this.calcularMedia(this.preciosVentaCasas),
-      moda: this.calcularModa(this.preciosVentaCasas),
-      mediana: this.calcularMediana(this.preciosVentaCasas),
-      rango: this.calcularRango(this.preciosVentaCasas)
-    };
-    this.anticreticoCasa = {
-      media: this.calcularMedia(this.preciosAnticreticoCasas),
-      moda: this.calcularModa(this.preciosAnticreticoCasas),
-      mediana: this.calcularMediana(this.preciosAnticreticoCasas),
-      rango: this.calcularRango(this.preciosAnticreticoCasas)
-    };
-  }
-  //    Obtencion de los precios de departamentos por tipo: alquiler,venta,anticretico. Calculo y carga de variables para uso general
-  calculoTipoTransaccionDepartamentos() {
-    for (let item of this.itemsDepartamento) {
-      if (item.tipo === "alquiler") {
-        this.preciosAlquilerDepartamentos.push(item.precio);
-      } else if (item.tipo === "venta") {
-        this.preciosVentaDepartamentos.push(item.precio);
-      } else {
-        this.preciosAnticreticoDepartamentos.push(item.precio);
-      }
-    }
-    this.preciosAlquilerDepartamentos = this.ordenarLista(this.preciosAlquilerDepartamentos);
-    this.preciosVentaDepartamentos = this.ordenarLista(this.preciosVentaDepartamentos);
-    this.preciosAnticreticoDepartamentos = this.ordenarLista(this.preciosAnticreticoDepartamentos);
-
-    this.alquilerDepartamento = {
-      media: this.calcularMedia(this.preciosAlquilerDepartamentos),
-      moda: this.calcularModa(this.preciosAlquilerDepartamentos),
-      mediana: this.calcularMediana(this.preciosAlquilerDepartamentos),
-      rango: this.calcularRango(this.preciosAlquilerDepartamentos)
-    };
-    this.ventaDepartamento = {
-      media: this.calcularMedia(this.preciosVentaDepartamentos),
-      moda: this.calcularModa(this.preciosVentaDepartamentos),
-      mediana: this.calcularMediana(this.preciosVentaDepartamentos),
-      rango: this.calcularRango(this.preciosVentaDepartamentos)
-    };
-    this.anticreticoDepartamento = {
-      media: this.calcularMedia(this.preciosAnticreticoDepartamentos),
-      moda: this.calcularModa(this.preciosAnticreticoDepartamentos),
-      mediana: this.calcularMediana(this.preciosAnticreticoDepartamentos),
-      rango: this.calcularRango(this.preciosAnticreticoDepartamentos)
-    };
-  }
-  //    Obtencion de los precios de lotes por tipo: alquiler,venta,anticretico. Calculo y carga de variables para uso general
-  calculoTipoTransaccionLotes() {
-    for (let item of this.itemsLote) {
-      if (item.tipo === "alquiler") {
-        this.preciosAlquilerLotes.push(item.precio);
-      } else if (item.tipo === "venta") {
-        this.preciosVentaLotes.push(item.precio);
-      } else {
-        this.preciosAnticreticoLotes.push(item.precio);
-      }
-    }
-    this.preciosAlquilerLotes = this.ordenarLista(this.preciosAlquilerLotes);
-    this.preciosVentaLotes = this.ordenarLista(this.preciosVentaLotes);
-    this.preciosAnticreticoLotes = this.ordenarLista(this.preciosAnticreticoLotes);
-
-    this.alquilerLote = {
-      media: this.calcularMedia(this.preciosAlquilerLotes),
-      moda: this.calcularModa(this.preciosAlquilerLotes),
-      mediana: this.calcularMediana(this.preciosAlquilerLotes),
-      rango: this.calcularRango(this.preciosAlquilerLotes)
-    };
-    this.ventaLote = {
-      media: this.calcularMedia(this.preciosVentaLotes),
-      moda: this.calcularModa(this.preciosVentaLotes),
-      mediana: this.calcularMediana(this.preciosVentaLotes),
-      rango: this.calcularRango(this.preciosVentaLotes)
-    };
-    this.anticreticoLote = {
-      media: this.calcularMedia(this.preciosAnticreticoLotes),
-      moda: this.calcularModa(this.preciosAnticreticoLotes),
-      mediana: this.calcularMediana(this.preciosAnticreticoLotes),
-      rango: this.calcularRango(this.preciosAnticreticoLotes)
-    };
-  }
-  //    Obtencion de los precios de locales comerciales por tipo: alquiler,venta,anticretico. Calculo y carga de variables para uso general
-  calculoTipoTransaccionLocales() {
-    for (let item of this.itemsLocal) {
-      if (item.tipo === "alquiler") {
-        this.preciosAlquilerLocales.push(item.precio);
-      } else if (item.tipo === "venta") {
-        this.preciosVentaLocales.push(item.precio);
-      } else {
-        this.preciosAnticreticoLocales.push(item.precio);
-      }
-    }
-    this.preciosAlquilerLocales = this.ordenarLista(this.preciosAlquilerLocales);
-    this.preciosVentaLocales = this.ordenarLista(this.preciosVentaLocales);
-    this.preciosAnticreticoLocales = this.ordenarLista(this.preciosAnticreticoLocales);
-
-    this.alquilerLocal = {
-      media: this.calcularMedia(this.preciosAlquilerLocales),
-      moda: this.calcularModa(this.preciosAlquilerLocales),
-      mediana: this.calcularMediana(this.preciosAlquilerLocales),
-      rango: this.calcularRango(this.preciosAlquilerLocales)
-    };
-    this.ventaLocal = {
-      media: this.calcularMedia(this.preciosVentaLocales),
-      moda: this.calcularModa(this.preciosVentaLocales),
-      mediana: this.calcularMediana(this.preciosVentaLocales),
-      rango: this.calcularRango(this.preciosVentaLocales)
-    };
-    this.anticreticoLocal = {
-      media: this.calcularMedia(this.preciosAnticreticoLocales),
-      moda: this.calcularModa(this.preciosAnticreticoLocales),
-      mediana: this.calcularMediana(this.preciosAnticreticoLocales),
-      rango: this.calcularRango(this.preciosAnticreticoLocales)
-    };
-  }
-  //    Metodo para controlar los botones de radio del grafico de barras,
-  radioButtonBarControl(event) {
-    var id = event.target.id;
-    console.log(id);
-    if (id === 'localesB') {
-      this.cargarGraficaBarras(this.locales);
-    } else if (id === 'casasB') {
-      this.cargarGraficaBarras(this.casas);
-    } else if (id === 'departamentosB') {
-      this.cargarGraficaBarras(this.departamentos);
-    } else if (id === 'lotesB') {
-      this.cargarGraficaBarras(this.lotes);
-    } else if (id === 'localalqui') {
-      this.cargarGraficaBarras(this.alquilerLocal);
-    } else if (id === 'localventa') {
-      this.cargarGraficaBarras(this.ventaLocal);
-    } else if (id === 'localanti') {
-      this.cargarGraficaBarras(this.anticreticoLocal);
-    } else if (id === 'casaalqui') {
-      this.cargarGraficaBarras(this.alquilerCasa);
-    } else if (id === 'casaventa') {
-      this.cargarGraficaBarras(this.ventaCasa);
-    } else if (id === 'casaanti') {
-      this.cargarGraficaBarras(this.anticreticoCasa);
-    } else if (id === 'depaalqui') {
-      this.cargarGraficaBarras(this.alquilerDepartamento);
-    } else if (id === 'depaventa') {
-      this.cargarGraficaBarras(this.ventaDepartamento);
-    } else if (id === 'depaanti') {
-      this.cargarGraficaBarras(this.anticreticoDepartamento);
-    } else if (id === 'lotealqui') {
-      this.cargarGraficaBarras(this.alquilerLote);
-    } else if (id === 'loteventa') {
-      this.cargarGraficaBarras(this.ventaLote);
-    } else if (id === 'loteanti') {
-      this.cargarGraficaBarras(this.anticreticoLote);
-    } else {
-      this.cargarGraficaBarras(this.global);
-    }
-  }
-  cargarGraficaBarras(obj: Estadistica) {
     this.barChartData = [
-      { data: [obj.media, obj.moda, obj.mediana, obj.rango], label: 'Precios($)' }
+      { data: [this.selectedOption1.media, this.selectedOption1.moda, this.selectedOption1.mediana, this.selectedOption1.maximo, this.selectedOption1.minimo], label: 'Precios($)' }
     ];
-  }
-  //    Metodo para controlar los botones de radio del grafico de barras,
-  radioButtonRadarControl(event) {
-    var id = event.target.id;
-    console.log(id);
-    if (id === 'localesR') {
-      this.cargarGraficaRadar(this.locales);
-    } else if (id === 'casasR') {
-      this.cargarGraficaRadar(this.casas);
-    } else if (id === 'departamentosR') {
-      this.cargarGraficaRadar(this.departamentos);
-    } else if (id === 'lotesR') {
-      this.cargarGraficaRadar(this.lotes);
-    } else if (id === 'localalqui') {
-      this.cargarGraficaRadar(this.alquilerLocal);
-    } else if (id === 'localventa') {
-      this.cargarGraficaRadar(this.ventaLocal);
-    } else if (id === 'localanti') {
-      this.cargarGraficaRadar(this.anticreticoLocal);
-    } else if (id === 'casaalqui') {
-      this.cargarGraficaRadar(this.alquilerCasa);
-    } else if (id === 'casaventa') {
-      this.cargarGraficaRadar(this.ventaCasa);
-    } else if (id === 'casaanti') {
-      this.cargarGraficaRadar(this.anticreticoCasa);
-    } else if (id === 'depaalqui') {
-      this.cargarGraficaRadar(this.alquilerDepartamento);
-    } else if (id === 'depaventa') {
-      this.cargarGraficaRadar(this.ventaDepartamento);
-    } else if (id === 'depaanti') {
-      this.cargarGraficaRadar(this.anticreticoDepartamento);
-    } else if (id === 'lotealqui') {
-      this.cargarGraficaRadar(this.alquilerLote);
-    } else if (id === 'loteventa') {
-      this.cargarGraficaRadar(this.ventaLote);
-    } else if (id === 'loteanti') {
-      this.cargarGraficaRadar(this.anticreticoLote);
-    } else {
-      this.cargarGraficaRadar(this.global);
-    }
-  }
-  cargarGraficaRadar(obj: Estadistica) {
     this.radarChartData = [
-      { data: [obj.media, obj.moda, obj.mediana, obj.rango], label: 'Precios($)' }
+      { data: [this.selectedOption1.media, this.selectedOption1.moda, this.selectedOption1.mediana, this.selectedOption1.maximo, this.selectedOption1.minimo], label: 'Precios($)' }
     ];
-  }
-  //    Metodo para controlar los botones de radio del grafico de pie,
-  radioButtonPieControl(event) {
-    var id = event.target.id;
-    console.log(id);
-    if (id === 'alquilerG') {
-      this.cargarGraficaPie(this.preciosAlquilerLotes, this.preciosAlquilerDepartamentos, this.preciosAlquilerCasas, this.preciosAlquilerLocales);
-    } else if (id === 'ventaG') {
-      this.cargarGraficaPie(this.preciosVentaLotes, this.preciosVentaDepartamentos, this.preciosVentaCasas, this.preciosVentaLocales);
-    } else if (id === 'anticreticoG') {
-      this.cargarGraficaPie(this.preciosAnticreticoLotes, this.preciosAnticreticoDepartamentos, this.preciosAnticreticoCasas, this.preciosAnticreticoLocales);
-    } else {
-      this.cargarGraficaPie(this.itemsLote, this.itemsDepartamento, this.itemsCasa, this.itemsLocal);
-    }
-  }
-  cargarGraficaPie(lote: any, depa: any, casa: any, loca: any) {
-    this.pieChartData = [lote.length, depa.length, casa.length, loca.length];
-  }
-  //    Metodo para controlar los botones de radio del grafico de area
-  radioButtonAreaControl(event) {
-    var id = event.target.id;
-    console.log(id);
-    if (id === 'alquiler') {
-      this.cargarGraficaArea(this.preciosAlquilerLotes, this.preciosAlquilerDepartamentos, this.preciosAlquilerCasas, this.preciosAlquilerLocales);
-    } else if (id === 'venta') {
-      this.cargarGraficaArea(this.preciosVentaLotes, this.preciosVentaDepartamentos, this.preciosVentaCasas, this.preciosVentaLocales);
-    } else if (id === 'anticretico') {
-      this.cargarGraficaArea(this.preciosAnticreticoLotes, this.preciosAnticreticoDepartamentos, this.preciosAnticreticoCasas, this.preciosAnticreticoLocales);
-    } else {
-      this.cargarGraficaArea(this.itemsLote, this.itemsDepartamento, this.itemsCasa, this.itemsLocal);
-    }
-  }
-  cargarGraficaArea(lote: any, depa: any, casa: any, loca: any) {
-    this.polarAreaChartData = [lote.length, depa.length, casa.length, loca.length];
+    console.log(this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"));
+    this.pieChartData = [this.getCount(this.selectedOption1.name, this.filtrotipo, "lote"), this.getCount(this.selectedOption1.name, this.filtrotipo, "departamento"), this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"), this.getCount(this.selectedOption1.name, this.filtrotipo, "local_comercial")];
+    this.polarAreaChartData = [this.getCount(this.selectedOption1.name, this.filtrotipo, "lote"), this.getCount(this.selectedOption1.name, this.filtrotipo, "departamento"), this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"), this.getCount(this.selectedOption1.name, this.filtrotipo, "local_comercial")];
   }
 
-}
-interface Estadistica {
-  media: number;
-  moda: number;
-  mediana: number;
-  rango: number;
+  onMonthChange(event:Event):void {
+    this.avisos=[];
+    this._dataService.getAvisosM(this.year,this.month)
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        for (let dato of datos) {
+          this.avisos.push({
+            precio: dato.precio,
+            seccion: dato.seccion,
+            tipo: dato.tipo,
+            municipio: dato.municipio,
+            distrito: dato.distrito,
+            otb: dato.otb,
+            dia: dato.dia,
+            mes: dato.mes,
+            year: dato.year
+          });
+        }
+        console.log('avisos:', this.avisos);
+      },
+        error => {
+          console.log(error);
+        });
+  }
+
+  onYearChange(event:Event):void {
+    this.avisos=[];
+    this._dataService.getAvisosM(this.year,this.month)
+      .subscribe(response => {
+        var datos = <Array<any>>response;
+        for (let dato of datos) {
+          this.avisos.push({
+            precio: dato.precio,
+            seccion: dato.seccion,
+            tipo: dato.tipo,
+            municipio: dato.municipio,
+            distrito: dato.distrito,
+            otb: dato.otb,
+            dia: dato.dia,
+            mes: dato.mes,
+            year: dato.year
+          });
+        }
+        console.log('avisos:', this.avisos);
+      },
+        error => {
+          console.log(error);
+        });
+  }
+
+
+
 }
