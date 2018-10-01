@@ -19,7 +19,10 @@ export class StatisticsPageComponent implements OnInit {
   filtro = "municipio";
   filtrotipo = "alquiler";
   filtrosec = "casa";
-  flagDist = false;
+  flagDist: boolean = false;
+  statisticsFlag: boolean = false;
+  compareFlag: boolean = false;
+  reportFlag: boolean = false;
   year = this.dt.getFullYear();
   month = this.dt.getMonth() + 1;
   months = [{ nombre: "Enero", num: 1 }, { nombre: "Febrero", num: 2 }, { nombre: "Marzo", num: 3 }, { nombre: "Abril", num: 1 },
@@ -62,9 +65,7 @@ export class StatisticsPageComponent implements OnInit {
     return resultado;
   }
 
-  statisticsFlag: boolean = false;
-  compareFlag: boolean = false;
-  reportFlag: boolean = false;
+ 
   constructor(private _dataService: DataService) { }
 
 
@@ -85,7 +86,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             media += aviso.precio;
             quantity++;
           }
@@ -121,7 +122,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -153,7 +154,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio > max)
               max = aviso.precio;
           }
@@ -182,13 +183,13 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             min = aviso.precio;
             break;
           }
         }
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             if (aviso.precio < min)
               min = aviso.precio;
           }
@@ -229,7 +230,7 @@ export class StatisticsPageComponent implements OnInit {
         break;
       case "distrito":
         for (let aviso of this.avisos) {
-          if (aviso.municipio === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
+          if (aviso.distrito === variable && aviso.tipo === tipo && aviso.seccion === seccion) {
             vector.push({
               precio: aviso.precio
             });
@@ -260,11 +261,13 @@ export class StatisticsPageComponent implements OnInit {
     var id = event.target.id;
     console.log(id);
     if (id === 'distritos') {
-      this.flagDist = true;
+      this.selectedOption1.name = "Sipe Sipe";
+      this.selectedOption2.name = "Sipe Sipe";
       this.filtro = 'distrito';
+      this.flagDist = true;
     } else {
-      this.flagDist = false;
       this.filtro = 'municipio';
+      this.flagDist = false;
     }
   }
 
@@ -321,7 +324,7 @@ export class StatisticsPageComponent implements OnInit {
     for (let index = 0; index < 20; index++) {
       this.years.push(2018+index);
     }
-    console.log('years: '+this.years)
+    console.log('years: '+this.years);
 
     this._dataService.getAvisosM(this.year,this.month)
       .subscribe(response => {
@@ -465,7 +468,11 @@ export class StatisticsPageComponent implements OnInit {
         distrito.moda = this.getModa(distrito.nombre, this.filtrotipo, this.filtrosec);
         distrito.maximo = this.getMax(distrito.nombre, this.filtrotipo, this.filtrosec);
         distrito.minimo = this.getMin(distrito.nombre, this.filtrotipo, this.filtrosec);
+        
       }
+      console.log("distritos: "+this.distritos);
+      console.log(this.flagDist);
+      console.log(this.filtro);
     } else {
       for (let municipio of this.municipios) {
         municipio.media = this.getMedia(municipio.nombre, this.filtrotipo, this.filtrosec);
@@ -492,12 +499,14 @@ export class StatisticsPageComponent implements OnInit {
     this.radarChartData = [
       { data: [this.selectedOption1.media, this.selectedOption1.moda, this.selectedOption1.mediana, this.selectedOption1.maximo, this.selectedOption1.minimo], label: 'Precios($)' }
     ];
-    console.log(this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"));
     this.pieChartData = [this.getCount(this.selectedOption1.name, this.filtrotipo, "lote"), this.getCount(this.selectedOption1.name, this.filtrotipo, "departamento"), this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"), this.getCount(this.selectedOption1.name, this.filtrotipo, "local_comercial")];
     this.polarAreaChartData = [this.getCount(this.selectedOption1.name, this.filtrotipo, "lote"), this.getCount(this.selectedOption1.name, this.filtrotipo, "departamento"), this.getCount(this.selectedOption1.name, this.filtrotipo, "casa"), this.getCount(this.selectedOption1.name, this.filtrotipo, "local_comercial")];
   }
 
-  onMonthChange(event:Event):void {
+  onDateChange(event:Event):void {
+    this.statisticsFlag = false;
+    this.compareFlag = false;
+    this.reportFlag = false;
     this.avisos=[];
     this._dataService.getAvisosM(this.year,this.month)
       .subscribe(response => {
@@ -522,31 +531,10 @@ export class StatisticsPageComponent implements OnInit {
         });
   }
 
-  onYearChange(event:Event):void {
-    this.avisos=[];
-    this._dataService.getAvisosM(this.year,this.month)
-      .subscribe(response => {
-        var datos = <Array<any>>response;
-        for (let dato of datos) {
-          this.avisos.push({
-            precio: dato.precio,
-            seccion: dato.seccion,
-            tipo: dato.tipo,
-            municipio: dato.municipio,
-            distrito: dato.distrito,
-            otb: dato.otb,
-            dia: dato.dia,
-            mes: dato.mes,
-            year: dato.year
-          });
-        }
-        console.log('avisos:', this.avisos);
-      },
-        error => {
-          console.log(error);
-        });
+  onDivChange(event){
+    this.statisticsFlag = false;
+    this.compareFlag = false;
+    this.reportFlag = false;
   }
-
-
 
 }

@@ -10,6 +10,7 @@ import { DataService } from '../../services/data.service';
     animations: [routerTransition()]
 })
 export class BlankPageComponent implements OnInit {
+    dt = new Date;
     showMenu: string = '';
     municipios = [];
     distritos = [];
@@ -24,6 +25,12 @@ export class BlankPageComponent implements OnInit {
     preciosMediaDistrito = [];
     preciosMediaOtb = [];
     opcion;
+    year = this.dt.getFullYear();
+    month = this.dt.getMonth() + 1;
+    months = [{ nombre: "Enero", num: 1 }, { nombre: "Febrero", num: 2 }, { nombre: "Marzo", num: 3 }, { nombre: "Abril", num: 1 },
+    { nombre: "Mayo", num: 5 }, { nombre: "Junio", num: 6 }, { nombre: "Julio", num: 7 }, { nombre: "Agosto", num: 8 },
+    { nombre: "Septiembre", num: 9 }, { nombre: "Octubre", num: 10 }, { nombre: "Noviembre", num: 11 }, { nombre: "Diciembre", num: 12 }]
+    years = [];
 
 
     onMouseOver(infoWindow, gm) {
@@ -48,8 +55,13 @@ export class BlankPageComponent implements OnInit {
     //    Funciona como un constructor para angular, obtenemos los datos del server mediante un observable(subscribe)
     //    aprovechando la obtencion de los datos, realizamos la reparticion al resto de nuestras variables con los datos de interes
     ngOnInit() {
+        for (let index = 0; index < 20; index++) {
+            this.years.push(2018 + index);
+        }
+        console.log('years: ' + this.years);
+
         this.opcion = "Media";
-        this._dataService.getAvisos()
+        this._dataService.getAvisosM(this.year,this.month)
             .subscribe(response => {
                 var datos = <Array<any>>response;
                 for (let dato of datos) {
@@ -182,8 +194,8 @@ export class BlankPageComponent implements OnInit {
         if (vector2[vector2.length - 1] && vector2[indice]) {
             if (indice == vector2.length - 1) {
                 for (let dato of vector1) {
-                    if(vector2[vector2.length - 1].nombre === dato.nombre)
-                    dato.intensidad = 0.8;
+                    if (vector2[vector2.length - 1].nombre === dato.nombre)
+                        dato.intensidad = 0.8;
                 }
             } else {
                 var intervalo = (vector2[vector2.length - 1].media - vector2[indice].media) / 5;
@@ -753,5 +765,32 @@ export class BlankPageComponent implements OnInit {
                 break;
         }
     }
-    click(event){}
+    click(event) { }
+
+    onDateChange(event:Event):void {
+        
+        this.av=[];
+        this._dataService.getAvisosM(this.year,this.month)
+          .subscribe(response => {
+            var datos = <Array<any>>response;
+            for (let dato of datos) {
+              this.av.push({
+                precio: dato.precio,
+                seccion: dato.seccion,
+                tipo: dato.tipo,
+                municipio: dato.municipio,
+                distrito: dato.distrito,
+                otb: dato.otb,
+                dia: dato.dia,
+                mes: dato.mes,
+                year: dato.year
+              });
+            }
+            console.log('avisos:', this.av);
+            this.setall(this.opcion);
+          },
+            error => {
+              console.log(error);
+            });
+      }
 }

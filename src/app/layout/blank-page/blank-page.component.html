@@ -1,122 +1,134 @@
 <div>
-	<p class="marg">Mapa genial</p>
+    <p class="marg">Mapa genial</p>
 </div>
 
 <div class="row">
-	<agm-map [latitude]="lat" [longitude]="lng" [mapTypeId]= "'satellite'" (mapClick)="click($event)" [zoom]="13">
+    <agm-map [latitude]="lat" [longitude]="lng" [mapTypeId]="'satellite'" (mapClick)="click($event)" [zoom]="13">
         <div *ngIf='!otbsFlag && !distritosFlag'>
-        <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#0000FF'"
-               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
+            <agm-polygon *ngFor="let municipio of municipios" [fillColor]="'#0000FF'" [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+                [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2" [visible]="true" (polyClick)="clicked(municipio.nombre)"
+                [zIndex]="1"></agm-polygon>
         </div>
-        <div *ngIf='otbsFlag' >
-        <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#0000FF'"
-               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
+        <div *ngIf='otbsFlag'>
+            <agm-polygon *ngFor="let municipio of otbs" [fillColor]="'#0000FF'" [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+                [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2" [visible]="true" (polyClick)="clicked(municipio.nombre)"
+                [zIndex]="1"></agm-polygon>
         </div>
         <div *ngIf='distritosFlag'>
-        <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#0000FF'"
-               [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
-               [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2"
-               [visible]="true" (polyClick)="clicked(municipio.nombre)" [zIndex]="1"></agm-polygon>
+            <agm-polygon *ngFor="let municipio of distritos" [fillColor]="'#0000FF'" [fillOpacity]="municipio.intensidad" [paths]="municipio.puntos"
+                [strokeColor]="'#FFFFFF'" [strokeOpacity]="0.9" [strokeWeight]="2" [visible]="true" (polyClick)="clicked(municipio.nombre)"
+                [zIndex]="1"></agm-polygon>
         </div>
     </agm-map>&nbsp;
-    
-    <div class="box"> 
-        <p class="sc">{{variablefiltrada}} <br>
-            {{filtrotipo}} <br>
-            {{filtrosec}} <br>
-        {{opcion}}: {{mediafiltrada}}</p>
-     </div>
-        <fieldset class="form-group">
-            <label>MAPA</label>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Completo    
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" id="distritos" value="option2" (change)="radioButtonChange($event)"> Distritos
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" id="otbs" value="option3" (change)="radioButtonChange($event)"> OTB's
-                </label>
-            </div>
-        </fieldset>&nbsp;
-        <fieldset class="form-group">
-            <label>Estadisticas</label>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRad" id="Media" value="option1" checked="" (change)="setestadistica($event)"> Media
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRad" id="Moda" value="option2" (change)="setestadistica($event)"> Moda
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRad" id="Mediana" value="option3" (change)="setestadistica($event)"> Mediana
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRad" id="Valor maximo" value="option4" (change)="setestadistica($event)"> Valor maximo     
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRad" id="Valor minimo" value="option5" (change)="setestadistica($event)"> Valor minimo
-                </label>
-            </div>
-        </fieldset>&nbsp;
-        <fieldset class="form-group">
-            <label>Sección</label>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options2" id="casa" value="option1" checked="" (change)="setseccion($event)"> Casa
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options2" id="dept" value="option2" (change)="setseccion($event)"> Departamento    
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options2" id="lote" value="option3" (change)="setseccion($event)"> Lote
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options2" id="local" value="option4" (change)="setseccion($event)"> Local
-                </label>
-            </div>
-        </fieldset>&nbsp;
-        <fieldset class="form-group">
-            <label>Tipo</label>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options3" id="alquiler" value="option1" checked="" (change)="settipo($event)"> Alquiler
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options3" id="venta" value="option2" (change)="settipo($event)"> Venta
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options3" id="anti" value="option3" (change)="settipo($event)"> Anticrético       
-                </label>
-            </div>
-        </fieldset>&nbsp;
 
-         
+    <div class="box">
+        <p class="sc">{{variablefiltrada}}
+            <br> {{filtrotipo}}
+            <br> {{filtrosec}}
+            <br> {{opcion}}: {{mediafiltrada}}</p>
+    </div>
+    <div>
+    <h4>
+        Elegir Fecha
+    </h4>
+    <div>
+        <select [(ngModel)]="month" (ngModelChange)="onDateChange($event)">
+            <option *ngFor="let month of this.months" [value]="month.num">{{month.nombre}}</option>
+        </select>
+    
+        <select [(ngModel)]="year" (ngModelChange)="onDateChange($event)">
+            <option *ngFor="let year of this.years" [value]="year">{{year}}</option>
+        </select>
+    </div>
+    <div class="row ml-0 pt-2">
+    <fieldset class="form-group">
+        <label>MAPA</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="completo" value="option1" checked="" (change)="radioButtonChange($event)"> Municipios
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="distritos" value="option2" (change)="radioButtonChange($event)"> Distritos
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="otbs" value="option3" (change)="radioButtonChange($event)"> OTB's
+            </label>
+        </div>
+    </fieldset>&nbsp;
+    <fieldset class="form-group">
+        <label>Estadisticas</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRad" id="Media" value="option1" checked="" (change)="setestadistica($event)"> Media
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRad" id="Moda" value="option2" (change)="setestadistica($event)"> Moda
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRad" id="Mediana" value="option3" (change)="setestadistica($event)"> Mediana
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRad" id="Valor maximo" value="option4" (change)="setestadistica($event)"> Valor maximo
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRad" id="Valor minimo" value="option5" (change)="setestadistica($event)"> Valor minimo
+            </label>
+        </div>
+    </fieldset>&nbsp;
+    <fieldset class="form-group">
+        <label>Sección</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options2" id="casa" value="option1" checked="" (change)="setseccion($event)"> Casa
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options2" id="dept" value="option2" (change)="setseccion($event)"> Departamento
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options2" id="lote" value="option3" (change)="setseccion($event)"> Lote
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options2" id="local" value="option4" (change)="setseccion($event)"> Local
+            </label>
+        </div>
+    </fieldset>&nbsp;
+    <fieldset class="form-group">
+        <label>Tipo</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options3" id="alquiler" value="option1" checked="" (change)="settipo($event)"> Alquiler
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options3" id="venta" value="option2" (change)="settipo($event)"> Venta
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="options3" id="anti" value="option3" (change)="settipo($event)"> Anticrético
+            </label>
+        </div>
+    </fieldset>&nbsp;
+</div>
+</div>  
+
 </div>

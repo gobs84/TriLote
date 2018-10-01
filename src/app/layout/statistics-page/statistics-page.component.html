@@ -10,11 +10,11 @@
     Elegir Fecha
 </h4>
 <div>
-    <select [(ngModel)]="month" (ngModelChange)="onMonthChange($event)">
+    <select [(ngModel)]="month" (ngModelChange)="onDateChange($event)">
         <option *ngFor="let month of this.months" [value]="month.num">{{month.nombre}}</option>
     </select>
 
-    <select [(ngModel)]="year" (ngModelChange)="onYearChange($event)">
+    <select [(ngModel)]="year" (ngModelChange)="onDateChange($event)">
         <option *ngFor="let year of this.years" [value]="year">{{year}}</option>
     </select>
 </div>
@@ -84,18 +84,18 @@
 </div>
 <h4>Elegir {{this.filtro}}</h4>
 <div>
-    <select *ngIf="!flagDist" [(ngModel)]="selectedOption1.name">
+    <select *ngIf="!flagDist" [(ngModel)]="selectedOption1.name" (ngModelChange)="onDivChange($event)">
         <option *ngFor="let municipio of this.municipios" [value]="municipio.nombre">{{municipio.nombre}}</option>
     </select>
 
-    <select *ngIf="flagDist" [(ngModel)]="selectedOption1.name">
+    <select *ngIf="flagDist" [(ngModel)]="selectedOption1.name" (ngModelChange)="onDivChange($event)">
         <option *ngFor="let distrito of this.distritos" [value]="distrito.nombre">{{distrito.nombre}}</option>
     </select>
 
-    <select *ngIf="!flagDist" style="margin-left:20px " [(ngModel)]="selectedOption2.name">
+    <select *ngIf="!flagDist" style="margin-left:20px " [(ngModel)]="selectedOption2.name" (ngModelChange)="onDivChange($event)">
         <option *ngFor="let municipio of this.municipios" [value]="municipio.nombre">{{municipio.nombre}}</option>
     </select>
-    <select *ngIf="flagDist" style="margin-left:20px" [(ngModel)]="selectedOption2.name">
+    <select *ngIf="flagDist" style="margin-left:20px" [(ngModel)]="selectedOption2.name" (ngModelChange)="onDivChange($event)">
         <option *ngFor="let distrito of this.distritos" [value]="distrito.nombre">{{distrito.nombre}}</option>
     </select>
 </div>
