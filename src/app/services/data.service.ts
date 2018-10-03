@@ -12,28 +12,28 @@ export class DataService {
 
   getUsers() {
   	this.result = null;
-  	return this._http.get("http://localhost:3000/api/users");
+  	return this._http.get("http://research.upb.edu:3000/api/users");
 
   	// return this.result;
-    /*return this._http.get("http://localhost:3000/api/users")
+    /*return this._http.get("http://research.upb.edu:3000/api/users")
       .map(result => this.result = result.json().data);*/
   }
   getMunicipios(){
-    return this._http.get("http://localhost:3000/api/municipios");
+    return this._http.get("http://research.upb.edu:3000/api/municipios");
   }
   getDistritos(){
-    return this._http.get("http://localhost:3000/api/distritos");
+    return this._http.get("http://research.upb.edu:3000/api/distritos");
   }
   getOtbs(){
-    return this._http.get("http://localhost:3000/api/otbs")
+    return this._http.get("http://research.upb.edu:3000/api/otbs")
   }
 
   getAvisos(){
-    return this._http.get("http://localhost:3000/api/avisos");
+    return this._http.get("http://research.upb.edu:3000/api/avisos");
   }
 
   getAvisosM(year, month){
-    return this._http.get("http://localhost:3000/api/avisos/mes/"+year+"/"+month);
+    return this._http.get("http://research.upb.edu:3000/api/avisos/mes/"+year+"/"+month);
   }
 
 

@@ -1,5 +1,5 @@
 <div>
-    <p class="marg">Mapa genial</p>
+    <p class="marg">Mapa del Área Metropolitana de Cochabamba</p>
 </div>
 
 <div class="row">
@@ -28,9 +28,10 @@
             <br> {{opcion}}: {{mediafiltrada}}</p>
     </div>
     <div>
-    <h4>
+      <br>
+    <h5>
         Elegir Fecha
-    </h4>
+    </h5>
     <div>
         <select [(ngModel)]="month" (ngModelChange)="onDateChange($event)">
             <option *ngFor="let month of this.months" [value]="month.num">{{month.nombre}}</option>
@@ -132,3 +133,8 @@
 </div>  
 
 </div>
+
+<div>
+  <br>
+<b>Nota Importante:</b> Los límites de las jurisdicciones municipales, distritales y de OTBs (Barrios) son <b><i>referenciales y no constituyen límites oficiales</i></b>. 
+  </div>
