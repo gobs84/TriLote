@@ -61,7 +61,7 @@ export class BlankPageComponent implements OnInit {
         console.log('years: ' + this.years);
 
         this.opcion = "Media";
-        this._dataService.getAvisosM(this.year,this.month)
+        this._dataService.getAvisosM(this.year, this.month)
             .subscribe(response => {
                 var datos = <Array<any>>response;
                 for (let dato of datos) {
@@ -661,6 +661,8 @@ export class BlankPageComponent implements OnInit {
             this.distritosFlag = false;
             this.filtro = 'municipio';
         }
+        this.mediafiltrada = 0;
+        this.variablefiltrada = 'Click en un área';
     }
 
     setestadistica(event) {
@@ -704,6 +706,7 @@ export class BlankPageComponent implements OnInit {
         this.setIntensidades(this.otbs, this.preciosMediaOtb);
         this.setIntensidades(this.distritos, this.preciosMediaDistrito);
         this.setIntensidades(this.municipios, this.preciosMediaMunicipio);
+        this.clicked(this.variablefiltrada);
     }
 
     settipo(event) {
@@ -719,6 +722,7 @@ export class BlankPageComponent implements OnInit {
                 this.filtrotipo = "anticretico";
                 break;
         }
+        this.clicked(this.variablefiltrada);
         this.setall(this.opcion);
     }
 
@@ -738,8 +742,10 @@ export class BlankPageComponent implements OnInit {
                 this.filtrosec = "local_comercial";
                 break;
         }
+        this.clicked(this.variablefiltrada);
         this.setall(this.opcion);
     }
+    
     clicked(nombre) {
         switch (this.filtro) {
             case "municipio":
@@ -767,30 +773,29 @@ export class BlankPageComponent implements OnInit {
     }
     click(event) { }
 
-    onDateChange(event:Event):void {
-        
-        this.av=[];
-        this._dataService.getAvisosM(this.year,this.month)
-          .subscribe(response => {
-            var datos = <Array<any>>response;
-            for (let dato of datos) {
-              this.av.push({
-                precio: dato.precio,
-                seccion: dato.seccion,
-                tipo: dato.tipo,
-                municipio: dato.municipio,
-                distrito: dato.distrito,
-                otb: dato.otb,
-                dia: dato.dia,
-                mes: dato.mes,
-                year: dato.year
-              });
-            }
-            console.log('avisos:', this.av);
-            this.setall(this.opcion);
-          },
-            error => {
-              console.log(error);
-            });
-      }
+    onDateChange(event: Event): void {
+        this.av = [];
+        this._dataService.getAvisosM(this.year, this.month)
+            .subscribe(response => {
+                var datos = <Array<any>>response;
+                for (let dato of datos) {
+                    this.av.push({
+                        precio: dato.precio,
+                        seccion: dato.seccion,
+                        tipo: dato.tipo,
+                        municipio: dato.municipio,
+                        distrito: dato.distrito,
+                        otb: dato.otb,
+                        dia: dato.dia,
+                        mes: dato.mes,
+                        year: dato.year
+                    });
+                }
+                console.log('avisos:', this.av);
+                this.setall(this.opcion);
+            },
+                error => {
+                    console.log(error);
+                });
+    }
 }
