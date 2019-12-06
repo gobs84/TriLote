@@ -4,12 +4,12 @@ import { KmlLayerManager, AgmKmlLayer } from '@agm/core';
 import { DataService } from '../../services/data.service';
 
 @Component({
-    selector: 'app-blank-page',
-    templateUrl: './blank-page.component.html',
-    styleUrls: ['./blank-page.component.scss'],
+    selector: 'app-map-page',
+    templateUrl: './map-page.component.html',
+    styleUrls: ['./map-page.component.scss'],
     animations: [routerTransition()]
 })
-export class BlankPageComponent implements OnInit {
+export class MapPageComponent implements OnInit {
     dt = new Date;
     showMenu: string = '';
     municipios = [];

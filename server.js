@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
+const request = require('request');
+var CronJob = require('cron').CronJob;
 var cors = require('cors');
-/*var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 var config = require('./config/DB');
 
 //	busca y conecta con la base de datos
@@ -12,8 +14,7 @@ var config = require('./config/DB');
           //else{console.log("connected: "+db,' + ',response);}
       });
         
-    
-*/
+
 const app = express();
 app.use(cors())
 //	llama a esta ruta
@@ -34,16 +35,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/index.html'));
 });
 
-/*var usuario = require('./src/app/Models/punto.js')
-app.get('/p', function(req,res,next){
-    usuario.find(function(err,post){
-        if(err) return next(err);
-        else{
-            res.json(post);
-        }
-    });
- });*/
-
 //Set Port
 const port = process.env.PORT || '3000';
 app.set('port', port);
@@ -52,13 +43,33 @@ const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
 
-/*var router = express.Router();
-var punto = require('./src/app/Models/punto.js')
- router.get('/:ID', function(req,res,next){
-    punto.findById(req.params.ID, function(err,post){
-        if(err) return next(err);
-        res.json(post);
-    });
- });
+// Add cronjobs to update and save data
+console.log('Adding cron jobs..');
+new CronJob('0 38 15 * * 5', function() {
+    console.log('Cron Job at : ' + new Date());
+    request
+        .get('http://localhost:'+port+'/api/scrap')
+        .on('response', function(response) {
+	    console.log("SCRAP at " + new Date());
+	    console.log('code status SCRAP' + response.statusCode)
+	    /*
+	    request
+		.get('http://localhost:'+port+'/api/saveapi')
+		.on('response', function(saveresponse) {
+		    console.log('code save status ' + saveresponse.statusCode)
+		})	   
+	    */
+	})
+}, null, true, 'America/La_Paz');
 
- module.exports = router;*/
+new CronJob('0 39 15 * * 5', function() {
+    console.log('Cron Save Job at : ' + new Date());
+    request
+        .get('http://localhost:'+port+'/api/saveapi')
+        .on('response', function(response) {
+	    console.log("SAVE at " + new Date());
+	    console.log('code status SAVE ' + response.statusCode)
+	})
+}, null, true, 'America/La_Paz');
+
+

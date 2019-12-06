@@ -9,7 +9,7 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-            { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' },
+            { path: 'map-page', loadChildren: './map-page/map-page.module#MapPageModule' },
             { path: 'quienes-somos', loadChildren: './quienes-somos/quienes-somos.module#QuienesSomosModule' },
             { path: 'statistics-page', loadChildren: './statistics-page/statistics-page.module#StatisticsPageModule' },
             { path: 'metodologia', loadChildren: './metodologia/metodologia.module#MetodologiaModule' }

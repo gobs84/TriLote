@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BlankPageComponent } from './blank-page.component';
+import { MapPageComponent } from './map-page.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: BlankPageComponent
+        component: MapPageComponent
     }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class BlankPageRoutingModule {}
+export class MapPageRoutingModule {}

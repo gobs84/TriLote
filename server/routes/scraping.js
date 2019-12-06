@@ -15,8 +15,9 @@ var db = mongoose.connect(config.DB, function (err, response) {
 });
 
 //archivo donde se escribira toda la data obtenida de la pagina
-var archivo = "datospagina.txt";
+var archivo = "datospagina.txt"; // "/dev/null"
 var information = [];
+
 //=======   PARSER: requiere de ciertas reglas con expresiones regulares para obtener la informacion especifica 
 //=======           dentro todos los datos que nos devuelve la pagina
 //Reglas para extraer los datos de latitud y longitud
@@ -303,7 +304,21 @@ function saveData(){
             mes : (dt.getMonth()+1),
             year : dt.getFullYear()
         });
-        aviso.save();
+	// Check if it exists
+	Aviso.findOne({
+	    latitude:element.latitude,
+	    longitude:element.longitude,
+	    precio: element.precio,
+	    mes: (dt.getMonth()+1),
+	    year: dt.getFullYear()
+	}, function(err, entry){
+	    if(err) console.log(err);
+	    if (entry){
+		//		console.log("Entry already exists... skip");
+	    } else {
+		aviso.save();
+	    }
+	});
     });
 }
 //});
